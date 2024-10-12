@@ -1,38 +1,26 @@
 import 'package:flutter/material.dart';
+import '../model/annoucment.dart';
 
 class AnnouncementTile extends StatelessWidget {
-  final String title;
-  final String authorName;
-  final DateTime date; // Zmiana na DateTime
-  final String imageUrl;
-  final String description;
+  final Annoucment announcement; // Zmienna przechowująca ogłoszenie
 
-  AnnouncementTile({
-    required this.title,
-    required this.authorName,
-    required this.date, // Użyj DateTime
-    this.imageUrl = 'assets/images/user_image.jpg',
-    required this.description,
-  });
+  AnnouncementTile({required this.announcement});
 
   @override
   Widget build(BuildContext context) {
     final double screenHeight = MediaQuery.of(context).size.height;
-    final double cardHeight = screenHeight / 7;
+    final double cardHeight = screenHeight / 6; // Możesz dostosować wysokość
     final double screenWidth = MediaQuery.of(context).size.width;
     final double cardWidth = screenWidth;
 
-    // Formatowanie daty na przyjazny tekst
-    String formattedDate = "${date.day}/${date.month}/${date.year}";
+    // Formatowanie daty
+    String formattedDate = announcement.whenAdded;
 
     return Container(
-      
       margin: const EdgeInsets.only(top: 4.0),
       height: cardHeight,
       width: cardWidth,
       child: Card(
-        // To są karty ogłoszeńs rgb(216,207,238)
-         color: const Color.fromRGBO(230, 225, 242, 1), 
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0),
         ),
@@ -40,24 +28,54 @@ class AnnouncementTile extends StatelessWidget {
           children: [
             ListTile(
               leading: CircleAvatar(
-                radius: 20.0,
-                backgroundImage: AssetImage(imageUrl),
+                radius: 25.0,
+                backgroundImage: AssetImage(announcement.ownerPicture),
               ),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              title: Text(title),
+              title: Text(announcement.title,
+                  style: const TextStyle(fontWeight: FontWeight.bold)),
               subtitle: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(authorName),
-                  Text(formattedDate, style: const TextStyle(fontSize: 12)),
+                  Text(
+                      'Właściciel: ${announcement.owner} (${announcement.ownerType})'),
+                  Text('Lokalizacja: ${announcement.location}'),
+                  Text('Dodano: $formattedDate',
+                      style: const TextStyle(fontSize: 12)),
+                  Text('Wyświetlenia: ${announcement.views}'),
+                  const SizedBox(height: 4.0),
+                  Wrap(
+                    spacing: 6.0,
+                    children: announcement.tags
+                        .map((tag) => Chip(
+                              label: Text(tag),
+                              backgroundColor: Colors.blueGrey[100],
+                            ))
+                        .toList(),
+                  ),
                 ],
               ),
             ),
+            const Divider(),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Text(description),
+              child: Text(announcement.abstract,
+                  maxLines: 2, overflow: TextOverflow.ellipsis),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // Informacja o typie pracy
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text('Rodzaj pracy: ${announcement.workingType}'),
+                ),
+                // Doświadczenie
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child:
+                      Text('Doświadczenie: ${announcement.levelOfExperience}'),
+                ),
+              ],
             ),
           ],
         ),
