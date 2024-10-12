@@ -3,19 +3,17 @@ import 'package:flutter/material.dart';
 class AnnouncementTile extends StatelessWidget {
   final String title;
   final String authorName;
-  final String date;
+  final DateTime date; // Zmiana na DateTime
   final String imageUrl;
   final String description;
 
   AnnouncementTile({
     required this.title,
     required this.authorName,
-    required this.date,
+    required this.date, // Użyj DateTime
     this.imageUrl = 'assets/images/user_image.jpg',
     required this.description,
   });
-
-  get onTap => null;
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +21,9 @@ class AnnouncementTile extends StatelessWidget {
     final double cardHeight = screenHeight / 7;
     final double screenWidth = MediaQuery.of(context).size.width;
     final double cardWidth = screenWidth;
+
+    // Formatowanie daty na przyjazny tekst
+    String formattedDate = "${date.day}/${date.month}/${date.year}";
 
     return Container(
       margin: const EdgeInsets.only(top: 4.0),
@@ -37,14 +38,19 @@ class AnnouncementTile extends StatelessWidget {
             ListTile(
               leading: CircleAvatar(
                 radius: 20.0,
-                backgroundImage: AssetImage('assets/images/user_image.jpg'),
+                backgroundImage: AssetImage(imageUrl),
               ),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10.0),
               ),
               title: Text(title),
-              subtitle: Text(authorName),
-              onTap: onTap,
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(authorName),
+                  Text(formattedDate, style: const TextStyle(fontSize: 12)),
+                ],
+              ),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),

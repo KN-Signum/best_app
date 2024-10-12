@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../screens/home.dart';
+
 class BaseLayout extends StatelessWidget {
   final Widget child; // zmienny element
   const BaseLayout({super.key, required this.child});
@@ -13,7 +15,11 @@ class BaseLayout extends StatelessWidget {
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.home),
-          onPressed: () {},
+          onPressed: () => Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => const Home(),
+            ),
+          ),
         ),
         automaticallyImplyLeading: false,
         backgroundColor: Colors.transparent,
@@ -30,6 +36,13 @@ class BaseLayout extends StatelessWidget {
                   child: IconButton(
                     onPressed: () {}, // Add functionality later
                     icon: const Icon(Icons.add),
+                  ),
+                ),
+                SizedBox(height: size.height * 0.025),
+                CircleAvatar(
+                  child: IconButton(
+                    onPressed: () {}, // Add functionality later
+                    icon: const Icon(Icons.announcement),
                   ),
                 ),
                 SizedBox(height: size.height * 0.025),
