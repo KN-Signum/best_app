@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../model/user.dart';
+import '../services/api_service.dart';
+import 'home.dart';
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -18,7 +22,100 @@ class _LoginScreenState extends State<LoginScreen> {
       _confirmPassword,
       _firstName,
       _lastName,
-      _phoneNumber;
+      _phoneNumber,
+      _bio; // Dodaj bio
+  List<String> _tags = []; // Dodaj tagi (domyślnie pusta lista)
+
+  // Metoda do obsługi zakończenia rejestracji
+  void _submitRegistration() async {
+    if (_password != _confirmPassword) {
+      // Zgłoś błąd, jeśli hasła się nie zgadzają
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Hasła muszą się zgadzać!')),
+      );
+      return;
+    }
+
+    // Stwórz użytkownika na podstawie wprowadzonych danych
+    UserToDb newUser = UserToDb(
+      name: _firstName ?? '',
+      surname: _lastName ?? '',
+      bio: _bio ?? 'Użytkownik nie podał bio.', // Przykładowy bio
+      tags: _tags.isNotEmpty
+          ? _tags
+          : ['General'], // Przykładowe tagi, jeśli brak
+      email: _email ?? '',
+      username: _login ?? '',
+      profilePicture: 'default_profile', // Przykładowy obraz
+      howManyRequests: 0, // Domyślnie zero zapytań
+      userType: 'Student', // Domyślny typ użytkownika
+      academicalIndex: 'N/A', // Domyślna wartość indeksu akademickiego
+    );
+
+    // Wywołanie API do stworzenia użytkownika
+    bool success = await ApiService().createUser(newUser, _password ?? '');
+
+    if (success) {
+      // Po pomyślnej rejestracji, przejdź do strony Home
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+            builder: (context) => const Home()), // Przejście do Home
+      );
+    } else {
+      // Obsługa błędu
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Rejestracja nie powiodła się.')),
+      );
+    }
+  }
+
+  // Metoda do obsługi logowania
+  void _submitLogin() {
+    // Logika logowania użytkownika
+    print('Logowanie zakończone');
+    print('Login: $_login');
+    print('Hasło: $_password');
+
+    // Możesz tutaj dodać logikę do uwierzytelnienia użytkownika
+  }
+
+  // Widget do budowania pól tekstowych
+  Widget _buildTextField({
+    required String hintText,
+    bool isPassword = false,
+    required ValueChanged<String> onChanged,
+  }) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 10),
+      decoration: BoxDecoration(
+        color: Colors.blueGrey[100],
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: TextFormField(
+        obscureText: isPassword,
+        decoration: InputDecoration(
+          hintText: hintText,
+          border: InputBorder.none,
+          contentPadding: const EdgeInsets.symmetric(horizontal: 15),
+        ),
+        onChanged: onChanged,
+      ),
+    );
+  }
+
+  // Widget do wyświetlania podsumowania danych w przeglądzie
+  Widget _buildReviewRow(String label, String? value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text('$label:', style: const TextStyle(fontWeight: FontWeight.bold)),
+          Text(value ?? '-'),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,12 +135,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
               const SizedBox(height: 30),
-              // Pole tekstowe na login
               _buildTextField(
                 hintText: 'Login',
                 onChanged: (value) => _login = value,
               ),
-              // Pole tekstowe na hasło
               _buildTextField(
                 hintText: 'Hasło',
                 isPassword: true,
@@ -98,6 +193,15 @@ class _LoginScreenState extends State<LoginScreen> {
                       hintText: 'Numer telefonu',
                       onChanged: (value) => _phoneNumber = value,
                     ),
+                    _buildTextField(
+                      hintText: 'Bio', // Pole bio
+                      onChanged: (value) => _bio = value,
+                    ),
+                    _buildTextField(
+                      hintText: 'Tagi (oddzielone przecinkami)', // Pole tagów
+                      onChanged: (value) => _tags =
+                          value.split(',').map((e) => e.trim()).toList(),
+                    ),
                   ],
                 ),
               ),
@@ -134,6 +238,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     _buildReviewRow('Imię', _firstName),
                     _buildReviewRow('Nazwisko', _lastName),
                     _buildReviewRow('Numer telefonu', _phoneNumber),
+                    _buildReviewRow('Bio', _bio),
+                    _buildReviewRow('Tagi', _tags.join(', ')),
                   ],
                 ),
               ),
@@ -148,7 +254,7 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
       body: Center(
         child: Container(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.all(10),
           width: isSmallScreen ? size.width * 0.9 : size.width * 0.6,
           height: isLogin
               ? size.height * (isSmallScreen ? 0.55 : 0.5)
@@ -168,7 +274,7 @@ class _LoginScreenState extends State<LoginScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              content, // Załaduj odpowiednią zawartość (logowanie/rejestracja)
+              content,
               const SizedBox(height: 20),
               SizedBox(
                 width: double.maxFinite,
@@ -217,66 +323,5 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
-  }
-
-  // Widget do budowania pól tekstowych
-  Widget _buildTextField(
-      {required String hintText,
-      bool isPassword = false,
-      required ValueChanged<String> onChanged}) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 10),
-      decoration: BoxDecoration(
-        color: Colors.blueGrey[100],
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: TextFormField(
-        obscureText: isPassword,
-        decoration: InputDecoration(
-          hintText: hintText,
-          border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 15),
-        ),
-        onChanged: onChanged,
-      ),
-    );
-  }
-
-  // Widget do wyświetlania podsumowania danych w przeglądzie
-  Widget _buildReviewRow(String label, String? value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 5),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text('$label:', style: const TextStyle(fontWeight: FontWeight.bold)),
-          Text(value ?? '-'),
-        ],
-      ),
-    );
-  }
-
-  // Metoda do obsługi zakończenia rejestracji
-  void _submitRegistration() {
-    // Logika rejestracji użytkownika
-    print('Rejestracja zakończona');
-    print('Login: $_login');
-    print('Email: $_email');
-    print('Imię: $_firstName');
-    print('Nazwisko: $_lastName');
-    print('Numer telefonu: $_phoneNumber');
-    print('Hasło: $_password');
-
-    // Możesz tutaj dodać logikę do zapisania danych użytkownika
-  }
-
-  // Metoda do obsługi logowania
-  void _submitLogin() {
-    // Logika logowania użytkownika
-    print('Logowanie zakończone');
-    print('Login: $_login');
-    print('Hasło: $_password');
-
-    // Możesz tutaj dodać logikę do uwierzytelnienia użytkownika
   }
 }

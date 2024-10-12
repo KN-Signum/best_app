@@ -1,3 +1,4 @@
+import 'package:best_app/screens/auth.dart';
 import 'package:flutter/material.dart';
 
 import 'screens/home.dart';
@@ -18,7 +19,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
-      home: const Home(),
+      home: LoginScreen(),
     );
   }
 }
