@@ -1,7 +1,8 @@
+import 'package:best_app/services/api_service.dart';
 import 'package:best_app/widgets/base_layout.dart';
 import 'package:flutter/material.dart';
-import 'package:best_app/data/mock_annoucments.dart';
 import 'package:best_app/widgets/annoucment_widget.dart';
+import 'package:intl/intl.dart';
 
 import '../model/annoucment.dart';
 
@@ -13,7 +14,8 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  List<Annoucment> announcements = mockAnnouncements; // Pełna lista ogłoszeń
+  ApiService apiService = ApiService();
+  List<Annoucment> announcements = []; // Pełna lista ogłoszeń
   List<Annoucment> filteredAnnouncements = []; // Przefiltrowana lista ogłoszeń
   String searchQuery = ""; // Przechowuje aktualne zapytanie wyszukiwania
 
@@ -26,24 +28,44 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    _sortAnnouncementsByDate(); // Domyślne sortowanie według daty
-    filteredAnnouncements = announcements; // Inicjalnie pełna lista
+    loadAnnouncements(); // Pobieranie ogłoszeń z API
+  }
+
+  // Pobieranie ogłoszeń z API
+  void loadAnnouncements() async {
+    try {
+      List<Annoucment> fetchedAnnouncements = await apiService.getAnnoucments();
+      setState(() {
+        announcements = fetchedAnnouncements;
+        filteredAnnouncements = announcements;
+        _sortAnnouncementsByDate(); // Sortowanie domyślne
+      });
+    } catch (e) {
+      print('Błąd podczas pobierania ogłoszeń: $e');
+    }
   }
 
   // Sortowanie ogłoszeń od najnowszych do najstarszych
   void _sortAnnouncementsByDate() {
-    announcements.sort((a, b) => b.date.compareTo(a.date));
+    // Użycie DateFormat do parsowania daty
+    final dateFormat = DateFormat('dd/MM/yyyy');
+
+    announcements.sort((a, b) {
+      DateTime dateA = dateFormat.parse(a.whenAdded); // Parsowanie a.whenAdded
+      DateTime dateB = dateFormat.parse(b.whenAdded); // Parsowanie b.whenAdded
+      return dateB
+          .compareTo(dateA); // Sortowanie od najnowszych do najstarszych
+    });
   }
 
   // Funkcja do filtrowania ogłoszeń na podstawie zapytania wyszukiwania
   void _filterAnnouncements() {
     setState(() {
-      // Filtruj po tytule i opisie na podstawie zapytania wyszukiwania
       filteredAnnouncements = announcements.where((announcement) {
         return announcement.title
                 .toLowerCase()
                 .contains(searchQuery.toLowerCase()) ||
-            announcement.description
+            announcement.abstract
                 .toLowerCase()
                 .contains(searchQuery.toLowerCase());
       }).toList();
@@ -82,16 +104,16 @@ class _HomeState extends State<Home> {
                 ),
               ),
               const SizedBox(height: 10),
-              // Informacje o autorze i dacie
+              // Informacje o właścicielu i dacie
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Autor: ${selectedAnnouncement!.authorName}',
+                    'Autor: ${selectedAnnouncement!.owner}',
                     style: const TextStyle(fontSize: 16),
                   ),
                   Text(
-                    'Data: ${selectedAnnouncement!.date.day}/${selectedAnnouncement!.date.month}/${selectedAnnouncement!.date.year}',
+                    'Data: ${selectedAnnouncement!.whenAdded}',
                     style: const TextStyle(fontSize: 16),
                   ),
                 ],
@@ -101,7 +123,8 @@ class _HomeState extends State<Home> {
               Center(
                 child: CircleAvatar(
                   radius: 40,
-                  backgroundImage: AssetImage(selectedAnnouncement!.image),
+                  backgroundImage:
+                      AssetImage(selectedAnnouncement!.ownerPicture),
                 ),
               ),
               const SizedBox(height: 20),
@@ -115,7 +138,7 @@ class _HomeState extends State<Home> {
               ),
               const SizedBox(height: 10),
               Text(
-                selectedAnnouncement!.description,
+                selectedAnnouncement!.abstract,
                 style: const TextStyle(fontSize: 16),
               ),
               const Spacer(),
@@ -123,38 +146,17 @@ class _HomeState extends State<Home> {
           )
         : Container();
 
-    return 
-    Scaffold( 
-      backgroundColor:  const Color.fromRGBO(244, 242, 238, 100),
-      body: BaseLayout(
+    return BaseLayout(
       child: isDetailView
           ? detailContent // Wyświetl szczegóły ogłoszenia
           : Column(
               children: [
                 Container(
-                  // Kontener z wyszukiwarką
-                margin: EdgeInsets.symmetric(
-                  horizontal: MediaQuery.of(context).size.width * 0.02, // 5% szerokości ekranu jako margines
-                  vertical: MediaQuery.of(context).size.height * 0.02, // 2% wysokości ekranu jako margines
-                ),
                   height: MediaQuery.of(context).size.height * 0.225,
-                  decoration: BoxDecoration(
-                    color: const Color.fromRGBO(230, 225, 242, 1), 
-                    borderRadius: BorderRadius.circular(20.0), 
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.2), 
-                        spreadRadius: 2, 
-                        blurRadius: 5,
-                        offset: Offset(0, 3),
-                      ),
-                    ],
-                  ),
+                  color: Colors.blueGrey[500],
                   child: Column(
                     children: [
                       Container(
-                        // To jest pasek do tytułu
-                        color:  Colors.transparent,
                         margin: const EdgeInsets.all(10),
                         child: const Align(
                           alignment: Alignment.centerLeft,
@@ -163,10 +165,9 @@ class _HomeState extends State<Home> {
                         ),
                       ),
                       Container(
-                        // to jest wyszukiwarka - wprowadzenie tekstu
                         margin: const EdgeInsets.symmetric(horizontal: 20),
                         decoration: BoxDecoration(
-                          color:   const Color.fromRGBO(216, 207, 238, 100),
+                          color: Colors.blueGrey[300],
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: TextFormField(
@@ -187,8 +188,6 @@ class _HomeState extends State<Home> {
                         ),
                       ),
                       Container(
-                        // to jest kontener z ikonkami filtrowania
-                        color: Colors.transparent,
                         margin: const EdgeInsets.symmetric(
                             horizontal: 10, vertical: 5),
                         child: Row(
@@ -217,8 +216,8 @@ class _HomeState extends State<Home> {
                 ),
                 Expanded(
                   child: Container(
-                    padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.02), 
-                    color:  const Color.fromRGBO(244, 242, 238, 100), 
+                    padding: const EdgeInsets.all(16),
+                    color: Colors.blueGrey[600],
                     child: GridView.builder(
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
@@ -235,12 +234,7 @@ class _HomeState extends State<Home> {
                                 filteredAnnouncements[index]);
                           },
                           child: AnnouncementTile(
-                            title: filteredAnnouncements[index].title,
-                            authorName: filteredAnnouncements[index].authorName,
-                            date: filteredAnnouncements[index].date,
-                            description:
-                                filteredAnnouncements[index].description,
-                          ),
+                              announcement: filteredAnnouncements[index]),
                         );
                       },
                     ),
@@ -248,7 +242,6 @@ class _HomeState extends State<Home> {
                 ),
               ],
             ),
-    )
     );
-    }
+  }
 }
