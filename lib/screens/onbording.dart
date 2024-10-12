@@ -10,7 +10,7 @@ class OnBording extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        fontFamily: 'Roboto', // Nowoczesny, profesjonalny font
+        fontFamily: 'Roboto',
         primarySwatch: Colors.purple,
         textTheme: TextTheme(
           headlineLarge: TextStyle(fontSize: 40, fontWeight: FontWeight.bold, color: Colors.black),
@@ -36,7 +36,7 @@ class OnboardingPage extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // Sekcja nagłówka z gradientem
+            // Nagłówek
             Container(
               width: double.infinity,
               padding: EdgeInsets.all(size.width * 0.05),
@@ -64,7 +64,7 @@ class OnboardingPage extends StatelessWidget {
             ),
             const SizedBox(height: 40),
 
-            // Sekcja z funkcjami
+            // Sekcja "Funkcje"
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Wrap(
@@ -97,48 +97,54 @@ class OnboardingPage extends StatelessWidget {
             ),
             const SizedBox(height: 40),
 
-            // Sekcja "O nas"
+            // Kreatywna sekcja "O nas"
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 40),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
-                    'O nas',
+                    'Dlaczego Brain Bridge?',
                     style: Theme.of(context).textTheme.headlineMedium,
                   ),
                   const SizedBox(height: 20),
-                  Text(
-                    'Brain Bridge powstał, aby ułatwić proces poszukiwania promotora i partnera badawczego dla studentów i naukowców. Wierzymy, że współpraca jest kluczem do osiągania wybitnych wyników naukowych.',
-                    style: Theme.of(context).textTheme.bodyLarge,
+
+                  // Dodanie obrazków i tekstów w stylu kart
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      AboutCard(
+                        imagePath: 'https://example.com/teamwork.png',
+                        title: 'Powód powstania',
+                        description: 'Brain Bridge powstał, aby ułatwić studentom i naukowcom odnalezienie promotorów oraz współpracowników badawczych.',
+                      ),
+                      AboutCard(
+                        imagePath: 'https://example.com/tools.png',
+                        title: 'Co umożliwiamy',
+                        description: 'Oferujemy narzędzia, które wspierają efektywną współpracę nad projektami badawczymi.',
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 20),
-                  Text(
-                    'Nasza platforma umożliwia:',
-                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontSize: 24),
-                  ),
-                  const SizedBox(height: 10),
-                  Text(
-                    '• Znalezienie promotora, który będzie wspierał Cię w tworzeniu pracy naukowej.\n'
-                    '• Nawiązanie współpracy z innymi badaczami o podobnych zainteresowaniach.\n'
-                    '• Wymianę wiedzy i pomysłów w bezpiecznym środowisku.',
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
-                  const SizedBox(height: 20),
-                  Text(
-                    'Dlaczego warto skorzystać z Brain Bridge?',
-                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontSize: 24),
-                  ),
-                  const SizedBox(height: 10),
-                  Text(
-                    '• Ułatwiamy proces poszukiwania współpracowników.\n'
-                    '• Oszczędzamy Twój czas, eliminując długie poszukiwania.\n'
-                    '• Zwiększamy szanse na sukces naukowy dzięki skutecznej współpracy.',
-                    style: Theme.of(context).textTheme.bodyLarge,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      AboutCard(
+                        imagePath: 'https://example.com/success.png',
+                        title: 'Dlaczego warto?',
+                        description: 'Brain Bridge oszczędza Twój czas i pomaga w tworzeniu efektywnych zespołów badawczych, zwiększając szanse na sukces naukowy.',
+                      ),
+                      AboutCard(
+                        imagePath: 'https://example.com/innovation.png',
+                        title: 'Nasza wizja',
+                        description: 'Naszym celem jest zbudowanie mostu pomiędzy naukowcami na całym świecie, wspierając innowacje i badania.',
+                      ),
+                    ],
                   ),
                 ],
               ),
             ),
+            const SizedBox(height: 40),
           ],
         ),
       ),
@@ -146,7 +152,7 @@ class OnboardingPage extends StatelessWidget {
   }
 }
 
-// Widget Karty Onboarding
+// Widget OnboardingCard
 class OnboardingCard extends StatelessWidget {
   final IconData icon;
   final String title;
@@ -162,12 +168,12 @@ class OnboardingCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Container(
-      width: size.width < 600 ? size.width * 0.8 : size.width * 0.4, // Szerokość karty w zależności od ekranu
+      width: size.width < 600 ? size.width * 0.8 : size.width * 0.4,
       padding: const EdgeInsets.all(20.0),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(15),
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
             color: Colors.black12,
             blurRadius: 10,
@@ -189,6 +195,50 @@ class OnboardingCard extends StatelessWidget {
             title,
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontSize: 24),
+          ),
+          const SizedBox(height: 10),
+          Text(
+            description,
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// Widget AboutCard do sekcji "O nas"
+class AboutCard extends StatelessWidget {
+  final String imagePath;
+  final String title;
+  final String description;
+
+  const AboutCard({super.key, 
+    required this.imagePath,
+    required this.title,
+    required this.description,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    return Container(
+      width: size.width < 600 ? size.width * 0.8 : size.width * 0.35,
+      padding: const EdgeInsets.all(20.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Image.network(
+            imagePath,
+            height: size.height * 0.15,
+            fit: BoxFit.cover,
+          ),
+          const SizedBox(height: 20),
+          Text(
+            title,
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontSize: 22),
           ),
           const SizedBox(height: 10),
           Text(
