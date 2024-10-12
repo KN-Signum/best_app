@@ -13,9 +13,10 @@ class BaseLayout extends StatelessWidget {
     final Size size = MediaQuery.of(context).size;
 
     return Scaffold(
-      backgroundColor: Colors.blueGrey[200],
+      backgroundColor: const Color.fromRGBO(244, 242, 238, 100),
       appBar: AppBar(
         leading: IconButton(
+          // to jest ikonka home
           icon: const Icon(Icons.home),
           onPressed: () => Navigator.of(context).push(
             MaterialPageRoute(
@@ -24,17 +25,18 @@ class BaseLayout extends StatelessWidget {
           ),
         ),
         automaticallyImplyLeading: false,
-        backgroundColor: Colors.transparent,
+        backgroundColor: const Color.fromRGBO(244, 242, 238, 100),
       ),
       body: Row(
         children: [
           Container(
             width: size.width * 0.05,
-            color: Colors.blueGrey[300],
+            color: const Color.fromRGBO(244, 242, 238, 100),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 CircleAvatar(
+                  backgroundColor: const Color.fromRGBO(216, 207, 238, 100),
                   child: IconButton(
                     onPressed: () {
                       showAddAnnouncementDialog(context, (newAnnouncement) {
@@ -47,6 +49,7 @@ class BaseLayout extends StatelessWidget {
                 ),
                 SizedBox(height: size.height * 0.025),
                 CircleAvatar(
+                  backgroundColor: const Color.fromRGBO(216, 207, 238, 100),
                   child: IconButton(
                     onPressed: () {}, // Add functionality later
                     icon: const Icon(Icons.announcement),

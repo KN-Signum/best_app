@@ -21,6 +21,7 @@ class AnnouncementTile extends StatelessWidget {
       height: cardHeight,
       width: cardWidth,
       child: Card(
+        color: const Color.fromRGBO(230, 225, 242, 1),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0),
         ),

@@ -146,102 +146,125 @@ class _HomeState extends State<Home> {
           )
         : Container();
 
-    return BaseLayout(
-      child: isDetailView
-          ? detailContent // Wyświetl szczegóły ogłoszenia
-          : Column(
-              children: [
-                Container(
-                  height: MediaQuery.of(context).size.height * 0.225,
-                  color: Colors.blueGrey[500],
-                  child: Column(
-                    children: [
-                      Container(
-                        margin: const EdgeInsets.all(10),
-                        child: const Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text('Wyszukiwanie',
-                              style: TextStyle(fontSize: 20)),
+    return Scaffold(
+      backgroundColor: const Color.fromRGBO(244, 242, 238, 100),
+      body: BaseLayout(
+        child: isDetailView
+            ? detailContent // Wyświetl szczegóły ogłoszenia
+            : Column(
+                children: [
+                  Container(
+                    margin: EdgeInsets.symmetric(
+                      horizontal: MediaQuery.of(context).size.width *
+                          0.02, // 5% szerokości ekranu jako margines
+                      vertical: MediaQuery.of(context).size.height *
+                          0.02, // 2% wysokości ekranu jako margines
+                    ),
+                    height: MediaQuery.of(context).size.height * 0.225,
+                    decoration: BoxDecoration(
+                      color: const Color.fromRGBO(230, 225, 242, 1),
+                      borderRadius: BorderRadius.circular(20.0),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.2),
+                          spreadRadius: 2,
+                          blurRadius: 5,
+                          offset: Offset(0, 3),
                         ),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 20),
-                        decoration: BoxDecoration(
-                          color: Colors.blueGrey[300],
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: TextFormField(
-                          controller: _searchController,
-                          decoration: const InputDecoration(
-                            hintText: '  Wyszukaj',
-                            contentPadding:
-                                EdgeInsets.symmetric(horizontal: 15),
-                            border: InputBorder.none, // Usuwa podkreślenie
+                      ],
+                    ),
+                    child: Column(
+                      children: [
+                        Container(
+                          color: Colors.transparent,
+                          margin: const EdgeInsets.all(10),
+                          child: const Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text('Wyszukiwanie',
+                                style: TextStyle(fontSize: 20)),
                           ),
-                          onChanged: (value) {
-                            setState(() {
-                              searchQuery =
-                                  value; // Aktualizuj zapytanie wyszukiwania
-                              _filterAnnouncements(); // Filtruj ogłoszenia
-                            });
-                          },
                         ),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 5),
-                        child: Row(
-                          children: [
-                            for (int i = 0; i < 21; i++)
-                              Container(
-                                margin:
-                                    const EdgeInsets.symmetric(horizontal: 5),
-                                child: CircleAvatar(
-                                  backgroundColor: Colors.blueGrey[300],
-                                  child: Center(
-                                    child: IconButton(
-                                      onPressed: () {
-                                        // Możliwość dodania filtrów w przyszłości
-                                      },
-                                      icon: const Icon(Icons.category),
+                        Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 20),
+                          decoration: BoxDecoration(
+                            color: const Color.fromRGBO(216, 207, 238, 100),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: TextFormField(
+                            controller: _searchController,
+                            decoration: const InputDecoration(
+                              hintText: '  Wyszukaj',
+                              contentPadding:
+                                  EdgeInsets.symmetric(horizontal: 15),
+                              border: InputBorder.none, // Usuwa podkreślenie
+                            ),
+                            onChanged: (value) {
+                              setState(() {
+                                searchQuery =
+                                    value; // Aktualizuj zapytanie wyszukiwania
+                                _filterAnnouncements(); // Filtruj ogłoszenia
+                              });
+                            },
+                          ),
+                        ),
+                        Container(
+                          color: Colors.transparent,
+                          margin: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 5),
+                          child: Row(
+                            children: [
+                              for (int i = 0; i < 21; i++)
+                                Container(
+                                  margin:
+                                      const EdgeInsets.symmetric(horizontal: 5),
+                                  child: CircleAvatar(
+                                    backgroundColor: Colors.blueGrey[300],
+                                    child: Center(
+                                      child: IconButton(
+                                        onPressed: () {
+                                          // Możliwość dodania filtrów w przyszłości
+                                        },
+                                        icon: const Icon(Icons.category),
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: Container(
-                    padding: const EdgeInsets.all(16),
-                    color: Colors.blueGrey[600],
-                    child: GridView.builder(
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 4,
-                        crossAxisSpacing: 10.0,
-                        mainAxisSpacing: 10.0,
-                        childAspectRatio: 1,
-                      ),
-                      itemCount: filteredAnnouncements.length,
-                      itemBuilder: (context, index) {
-                        return InkWell(
-                          onTap: () {
-                            _showAnnouncementDetails(
-                                filteredAnnouncements[index]);
-                          },
-                          child: AnnouncementTile(
-                              announcement: filteredAnnouncements[index]),
-                        );
-                      },
+                      ],
                     ),
                   ),
-                ),
-              ],
-            ),
+                  Expanded(
+                    child: Container(
+                      padding: EdgeInsets.all(
+                          MediaQuery.of(context).size.width * 0.02),
+                      color: const Color.fromRGBO(244, 242, 238, 100),
+                      child: GridView.builder(
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 4,
+                          crossAxisSpacing: 10.0,
+                          mainAxisSpacing: 10.0,
+                          childAspectRatio: 1,
+                        ),
+                        itemCount: filteredAnnouncements.length,
+                        itemBuilder: (context, index) {
+                          return InkWell(
+                            onTap: () {
+                              _showAnnouncementDetails(
+                                  filteredAnnouncements[index]);
+                            },
+                            child: AnnouncementTile(
+                                announcement: filteredAnnouncements[index]),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+      ),
     );
   }
 }
