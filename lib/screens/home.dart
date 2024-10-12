@@ -65,63 +65,82 @@ class _HomeState extends State<Home> {
       selectedAnnouncement = null;
     });
   }
-
-  @override
-  Widget build(BuildContext context) {
-    // Layout szczegółów ogłoszenia
-    var detailContent = selectedAnnouncement != null
-        ? Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+@override
+Widget build(BuildContext context) {
+  // Layout szczegółów ogłoszenia
+  var detailContent = selectedAnnouncement != null
+      ? SingleChildScrollView(
+          padding: const EdgeInsets.all(16.0), // Stały margines
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center, // Wyśrodkowanie poziome
             children: [
               // Tytuł ogłoszenia
               Text(
                 selectedAnnouncement!.title,
                 style: const TextStyle(
-                  fontSize: 24,
+                  fontSize: 24, // Stała wielkość czcionki
                   fontWeight: FontWeight.bold,
                 ),
+                textAlign: TextAlign.center, // Wyśrodkowanie tekstu
               ),
               const SizedBox(height: 10),
-              // Informacje o autorze i dacie
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              
+              // Informacje o autorze i dacie (teraz w Column)
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center, // Wyśrodkowanie tekstu
                 children: [
                   Text(
                     'Autor: ${selectedAnnouncement!.authorName}',
-                    style: const TextStyle(fontSize: 16),
+                    style: const TextStyle(
+                      fontSize: 16, // Stała wielkość czcionki
+                    ),
+                    textAlign: TextAlign.center,
                   ),
+                  const SizedBox(height: 5), // Drobny odstęp między autorem a datą
                   Text(
                     'Data: ${selectedAnnouncement!.date.day}/${selectedAnnouncement!.date.month}/${selectedAnnouncement!.date.year}',
-                    style: const TextStyle(fontSize: 16),
+                    style: const TextStyle(
+                      fontSize: 16, // Stała wielkość czcionki
+                    ),
+                    textAlign: TextAlign.center,
                   ),
                 ],
               ),
               const SizedBox(height: 20),
+              
               // Obrazek autora lub ogłoszenia
               Center(
                 child: CircleAvatar(
-                  radius: 40,
+                  radius: 40, // Stała wielkość obrazka
                   backgroundImage: AssetImage(selectedAnnouncement!.image),
                 ),
               ),
               const SizedBox(height: 20),
-              // Opis ogłoszenia
+              
+              // Nagłówek "Opis"
               const Text(
                 'Opis:',
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 18, // Stała wielkość czcionki
                   fontWeight: FontWeight.bold,
                 ),
               ),
               const SizedBox(height: 10),
+              
+              // Opis ogłoszenia
               Text(
                 selectedAnnouncement!.description,
-                style: const TextStyle(fontSize: 16),
+                style: const TextStyle(
+                  fontSize: 16, // Stała wielkość czcionki
+                  height: 1.5, // Lepsza czytelność tekstu
+                ),
+                textAlign: TextAlign.center, // Wyśrodkowanie opisu
               ),
-              const Spacer(),
+              const SizedBox(height: 20),
             ],
-          )
-        : Container();
+          ),
+        )
+      : Container();
 
     return 
     Scaffold( 

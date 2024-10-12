@@ -25,43 +25,47 @@ class AnnouncementTile extends StatelessWidget {
     // Formatowanie daty na przyjazny tekst
     String formattedDate = "${date.day}/${date.month}/${date.year}";
 
-    return Container(
-      
-      margin: const EdgeInsets.only(top: 4.0),
-      height: cardHeight,
-      width: cardWidth,
-      child: Card(
-        // To są karty ogłoszeńs rgb(216,207,238)
-         color: const Color.fromRGBO(230, 225, 242, 1), 
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.0),
+return Container(
+  margin: const EdgeInsets.only(top: 4.0),
+  height: cardHeight,
+  width: cardWidth,
+  child: Card(
+    // To są karty ogłoszeń RGB(216,207,238)
+    color: const Color.fromRGBO(230, 225, 242, 1), 
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(10.0),
+    ),
+    child: Column(
+      children: [
+        ListTile(
+          leading: CircleAvatar(
+            radius: 20.0,
+            backgroundImage: AssetImage(imageUrl),
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          title: Text(title),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(authorName),
+              Text(formattedDate, style: const TextStyle(fontSize: 12)),
+            ],
+          ),
         ),
-        child: Column(
-          children: [
-            ListTile(
-              leading: CircleAvatar(
-                radius: 20.0,
-                backgroundImage: AssetImage(imageUrl),
-              ),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              title: Text(title),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(authorName),
-                  Text(formattedDate, style: const TextStyle(fontSize: 12)),
-                ],
-              ),
+        Expanded(
+          child: Center( // Wyśrodkowanie opisu w pionie i poziomie
+            child: Text(
+              description,
+              textAlign: TextAlign.center, // Wyśrodkowanie tekstu w poziomie
+              style: const TextStyle(fontSize: 14),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(description),
-            ),
-          ],
+          ),
         ),
-      ),
-    );
+      ],
+    ),
+  ),
+);
   }
 }
