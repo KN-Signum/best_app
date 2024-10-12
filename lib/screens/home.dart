@@ -7,7 +7,8 @@ import 'package:intl/intl.dart';
 import '../model/annoucment.dart';
 
 class Home extends StatefulWidget {
-  const Home({super.key});
+  Home({super.key, required this.userId});
+  final String? userId;
 
   @override
   _HomeState createState() => _HomeState();

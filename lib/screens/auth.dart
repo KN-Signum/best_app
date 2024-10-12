@@ -56,10 +56,13 @@ class _LoginScreenState extends State<LoginScreen> {
     bool success = await ApiService().createUser(newUser, _password ?? '');
 
     if (success) {
+      String? userId = await ApiService().getUserByUsername(_login!);
       // Po pomyślnej rejestracji, przejdź do strony Home
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-            builder: (context) => const Home()), // Przejście do Home
+            builder: (context) => Home(
+                  userId: userId,
+                )), // Przejście do Home
       );
     } else {
       // Obsługa błędu
@@ -70,13 +73,30 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   // Metoda do obsługi logowania
-  void _submitLogin() {
-    // Logika logowania użytkownika
-    print('Logowanie zakończone');
-    print('Login: $_login');
-    print('Hasło: $_password');
+  void _submitLogin() async {
+    if (_login == null || _password == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Proszę wprowadzić login i hasło.')),
+      );
+      return;
+    }
 
-    // Możesz tutaj dodać logikę do uwierzytelnienia użytkownika
+    // Wywołanie API do walidacji użytkownika
+    bool success = await ApiService().validateUser(_login!, _password!);
+
+    if (success) {
+      String? userId = await ApiService().getUserByUsername(_login!);
+      // Po pomyślnej walidacji, przejdź do strony Home
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+            builder: (context) => Home(userId: userId)), // Przejście do Home
+      );
+    } else {
+      // Obsługa błędu
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Niepoprawne dane logowania.')),
+      );
+    }
   }
 
   // Widget do budowania pól tekstowych

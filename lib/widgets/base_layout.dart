@@ -16,14 +16,15 @@ class BaseLayout extends StatelessWidget {
       backgroundColor: const Color.fromRGBO(244, 242, 238, 100),
       appBar: AppBar(
         leading: IconButton(
-          // to jest ikonka home
-          icon: const Icon(Icons.home),
-          onPressed: () => Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => const Home(),
+            // to jest ikonka home
+            icon: const Icon(Icons.home),
+            onPressed: () {}
+            // Navigator.of(context).push(
+            //   MaterialPageRoute(
+            //     builder: (context) => Home(),
+            //   ),
+            // ),
             ),
-          ),
-        ),
         automaticallyImplyLeading: false,
         backgroundColor: const Color.fromRGBO(244, 242, 238, 100),
       ),

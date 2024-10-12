@@ -82,4 +82,55 @@ class ApiService {
       return false;
     }
   }
+
+  Future<bool> validateUser(String username, String password) async {
+    final url = Uri.parse('$_baseUrl/validate_user/$username/$password');
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          'accept': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        // Zakładamy, że status 200 oznacza pomyślną walidację
+        return true;
+      } else {
+        // Obsługa błędów
+        print('Failed to validate user: ${response.statusCode}');
+        return false;
+      }
+    } catch (e) {
+      print('Error validating user: $e');
+      return false;
+    }
+  }
+
+  Future<String?> getUserByUsername(String username) async {
+    final url = Uri.parse('$_baseUrl/get_user/$username');
+
+    try {
+      final response = await http.get(
+        url,
+        headers: {
+          'accept': 'application/json',
+          "ngrok-skip-browser-warning": "true"
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final String data = response.body;
+        return data;
+      } else {
+        // Obsługa błędów
+        print('Failed to get user: ${response.statusCode}');
+        return null;
+      }
+    } catch (e) {
+      print('Error fetching user: $e');
+      return null;
+    }
+  }
 }

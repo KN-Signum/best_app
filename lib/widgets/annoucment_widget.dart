@@ -62,21 +62,16 @@ class AnnouncementTile extends StatelessWidget {
               child: Text(announcement.abstract,
                   maxLines: 2, overflow: TextOverflow.ellipsis),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // Informacja o typie pracy
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text('Rodzaj pracy: ${announcement.workingType}'),
-                ),
-                // Doświadczenie
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child:
-                      Text('Doświadczenie: ${announcement.levelOfExperience}'),
-                ),
-              ],
+
+            // Informacja o typie pracy
+            Padding(
+              padding: const EdgeInsets.all(1.0),
+              child: Text('Rodzaj pracy: ${announcement.workingType}'),
+            ),
+            // Doświadczenie
+            Padding(
+              padding: const EdgeInsets.all(1.0),
+              child: Text('Doświadczenie: ${announcement.levelOfExperience}'),
             ),
           ],
         ),
