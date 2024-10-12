@@ -11,9 +11,10 @@ class BaseLayout extends StatelessWidget {
     final Size size = MediaQuery.of(context).size;
 
     return Scaffold(
-      backgroundColor: Colors.blueGrey[200],
+       backgroundColor:  const Color.fromRGBO(244, 242, 238, 100),
       appBar: AppBar(
         leading: IconButton(
+          // To jest ikonka home
           icon: const Icon(Icons.home),
           onPressed: () => Navigator.of(context).push(
             MaterialPageRoute(
@@ -22,17 +23,19 @@ class BaseLayout extends StatelessWidget {
           ),
         ),
         automaticallyImplyLeading: false,
-        backgroundColor: Colors.transparent,
+        backgroundColor:  const Color.fromRGBO(244, 242, 238, 100), // to jest górny pasek menu z home
       ),
       body: Row(
         children: [
           Container(
             width: size.width * 0.05,
-            color: Colors.blueGrey[300],
+            color: const Color.fromRGBO(244, 242, 238, 100), // to jest boczny pasek
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 CircleAvatar(
+                  // To jest boczny pasek plusik
+                  backgroundColor:   const Color.fromRGBO(216, 207, 238, 100),
                   child: IconButton(
                     onPressed: () {}, // Add functionality later
                     icon: const Icon(Icons.add),
@@ -40,6 +43,8 @@ class BaseLayout extends StatelessWidget {
                 ),
                 SizedBox(height: size.height * 0.025),
                 CircleAvatar(
+                  // To jest boczny pasek komentarz
+                  backgroundColor:   const Color.fromRGBO(216, 207, 238, 100),
                   child: IconButton(
                     onPressed: () {}, // Add functionality later
                     icon: const Icon(Icons.announcement),
@@ -47,6 +52,7 @@ class BaseLayout extends StatelessWidget {
                 ),
                 SizedBox(height: size.height * 0.025),
                 CircleAvatar(
+                  // to jest boczny pasek konto (avatar)
                   backgroundImage:
                       const AssetImage('assets/images/user_image.jpg'),
                   child: IconButton(
@@ -59,8 +65,10 @@ class BaseLayout extends StatelessWidget {
             ),
           ),
           Container(
+            // to jest po kliknięciu w ogłoszenie 
             width: size.width * 0.95, // Zmienny element
             child: child,
+            // tutaj trzeba zrobić, żeby kolor był tylko przy wyświetlaniu tego okna  
           ),
         ],
       ),
