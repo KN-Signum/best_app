@@ -123,17 +123,38 @@ class _HomeState extends State<Home> {
           )
         : Container();
 
-    return BaseLayout(
+    return 
+    Scaffold( 
+      backgroundColor:  const Color.fromRGBO(244, 242, 238, 100),
+      body: BaseLayout(
       child: isDetailView
           ? detailContent // Wyświetl szczegóły ogłoszenia
           : Column(
               children: [
                 Container(
+                  // Kontener z wyszukiwarką
+                margin: EdgeInsets.symmetric(
+                  horizontal: MediaQuery.of(context).size.width * 0.02, // 5% szerokości ekranu jako margines
+                  vertical: MediaQuery.of(context).size.height * 0.02, // 2% wysokości ekranu jako margines
+                ),
                   height: MediaQuery.of(context).size.height * 0.225,
-                  color: Colors.blueGrey[500],
+                  decoration: BoxDecoration(
+                    color: const Color.fromRGBO(230, 225, 242, 1), 
+                    borderRadius: BorderRadius.circular(20.0), 
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2), 
+                        spreadRadius: 2, 
+                        blurRadius: 5,
+                        offset: Offset(0, 3),
+                      ),
+                    ],
+                  ),
                   child: Column(
                     children: [
                       Container(
+                        // To jest pasek do tytułu
+                        color:  Colors.transparent,
                         margin: const EdgeInsets.all(10),
                         child: const Align(
                           alignment: Alignment.centerLeft,
@@ -142,9 +163,10 @@ class _HomeState extends State<Home> {
                         ),
                       ),
                       Container(
+                        // to jest wyszukiwarka - wprowadzenie tekstu
                         margin: const EdgeInsets.symmetric(horizontal: 20),
                         decoration: BoxDecoration(
-                          color: Colors.blueGrey[300],
+                          color:   const Color.fromRGBO(216, 207, 238, 100),
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: TextFormField(
@@ -165,6 +187,8 @@ class _HomeState extends State<Home> {
                         ),
                       ),
                       Container(
+                        // to jest kontener z ikonkami filtrowania
+                        color: Colors.transparent,
                         margin: const EdgeInsets.symmetric(
                             horizontal: 10, vertical: 5),
                         child: Row(
@@ -193,8 +217,8 @@ class _HomeState extends State<Home> {
                 ),
                 Expanded(
                   child: Container(
-                    padding: const EdgeInsets.all(16),
-                    color: Colors.blueGrey[600],
+                    padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.02), 
+                    color:  const Color.fromRGBO(244, 242, 238, 100), 
                     child: GridView.builder(
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
@@ -224,6 +248,7 @@ class _HomeState extends State<Home> {
                 ),
               ],
             ),
+    )
     );
-  }
+    }
 }

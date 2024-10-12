@@ -11,7 +11,7 @@ class BaseLayout extends StatelessWidget {
     final Size size = MediaQuery.of(context).size;
 
     return Scaffold(
-      backgroundColor: Colors.transparent,
+       backgroundColor:  const Color.fromRGBO(244, 242, 238, 100),
       appBar: AppBar(
         leading: IconButton(
           // To jest ikonka home
@@ -67,8 +67,8 @@ class BaseLayout extends StatelessWidget {
           Container(
             // to jest po kliknięciu w ogłoszenie 
             width: size.width * 0.95, // Zmienny element
-            color: Colors.pink,
             child: child,
+            // tutaj trzeba zrobić, żeby kolor był tylko przy wyświetlaniu tego okna  
           ),
         ],
       ),

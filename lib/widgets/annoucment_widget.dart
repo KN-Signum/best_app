@@ -26,10 +26,13 @@ class AnnouncementTile extends StatelessWidget {
     String formattedDate = "${date.day}/${date.month}/${date.year}";
 
     return Container(
+      
       margin: const EdgeInsets.only(top: 4.0),
       height: cardHeight,
       width: cardWidth,
       child: Card(
+        // To są karty ogłoszeńs rgb(216,207,238)
+         color: const Color.fromRGBO(230, 225, 242, 1), 
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0),
         ),
