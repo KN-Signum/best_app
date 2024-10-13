@@ -8,14 +8,14 @@ class Annoucment {
   final String ownerId;
   final String ownerPicture;
   final String ownerType;
-  final int views;
   final String whenAdded;
   final String location;
-  final bool isActive;
   final String workingType;
   final String levelOfExperience;
-  final List<String>
-      requirements; // Zmiana nazwy z requiredSkills na requirements
+  final List<String> requirements;
+
+  // Poprawka dla `views` - obsługa null
+  final int? views; // Teraz jest nullable
 
   Annoucment({
     required this.id,
@@ -27,13 +27,12 @@ class Annoucment {
     required this.ownerId,
     required this.ownerPicture,
     required this.ownerType,
-    required this.views,
     required this.whenAdded,
     required this.location,
-    required this.isActive,
     required this.workingType,
     required this.levelOfExperience,
-    required this.requirements, // Zmiana
+    required this.requirements,
+    this.views, // Teraz nullable
   });
 
   factory Annoucment.fromJson(Map<String, dynamic> json) {
@@ -47,15 +46,13 @@ class Annoucment {
       ownerId: json['owner_id'] as String,
       ownerPicture: json['owner_picture'] as String,
       ownerType: json['owner_type'] as String,
-      views: json['views'] as int,
       whenAdded: json['when_added'] as String,
       location: json['location'] as String,
-      isActive: json['is_active'] as bool,
       workingType: json['working_type'] as String,
       levelOfExperience: json['level_of_experience'] as String,
-      requirements: (json['requirements'] as List) // Zmiana
-          .map((skill) => skill as String)
-          .toList(),
+      requirements:
+          (json['requirements'] as List).map((req) => req as String).toList(),
+      views: json['views'] != null ? json['views'] as int : 0, // Obsługa null
     );
   }
 }

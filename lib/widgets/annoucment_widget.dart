@@ -4,7 +4,7 @@ import '../model/annoucment.dart';
 class AnnouncementTile extends StatelessWidget {
   final Annoucment announcement; // Zmienna przechowująca ogłoszenie
 
-  AnnouncementTile({required this.announcement});
+  const AnnouncementTile({super.key, required this.announcement});
 
   @override
   Widget build(BuildContext context) {

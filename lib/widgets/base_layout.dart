@@ -1,30 +1,35 @@
 import 'package:flutter/material.dart';
-
 import '../dialogs/add_annoucments_dialog.dart';
 import '../screens/home.dart';
-import '../services/api_service.dart';
 
 class BaseLayout extends StatelessWidget {
   final Widget child; // zmienny element
-  const BaseLayout({super.key, required this.child});
+  final String? userId; // Dodanie pola userId
+  final List<dynamic> myNotes; // Lista notatek
 
+  const BaseLayout(
+      {super.key,
+      required this.child,
+      required this.userId,
+      required this.myNotes});
+  // Konstruktor przyjmujący userId
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
+
+    bool hasNotes = myNotes.isNotEmpty;
 
     return Scaffold(
       backgroundColor: const Color.fromRGBO(244, 242, 238, 100),
       appBar: AppBar(
         leading: IconButton(
-            // to jest ikonka home
-            icon: const Icon(Icons.home),
-            onPressed: () {}
-            // Navigator.of(context).push(
-            //   MaterialPageRoute(
-            //     builder: (context) => Home(),
-            //   ),
-            // ),
-            ),
+          icon: const Icon(Icons.home),
+          onPressed: () => Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+                builder: (context) =>
+                    Home(userId: userId)), // Przejście do Home
+          ), // Funkcjonalność do przycisku Home
+        ),
         automaticallyImplyLeading: false,
         backgroundColor: const Color.fromRGBO(244, 242, 238, 100),
       ),
@@ -40,19 +45,20 @@ class BaseLayout extends StatelessWidget {
                   backgroundColor: const Color.fromRGBO(216, 207, 238, 100),
                   child: IconButton(
                     onPressed: () {
-                      showAddAnnouncementDialog(context, (newAnnouncement) {
-                        // Przykładowe użycie: zapisanie ogłoszenia lub wywołanie API
-                        ApiService().addAnnoucment(newAnnouncement);
-                      });
-                    }, // Add functionality later
+                      // Wywołanie dialogu dodawania ogłoszeń z przekazaniem userId
+                      showAddAnnouncementDialog(context, userId);
+                    },
                     icon: const Icon(Icons.add),
                   ),
                 ),
                 SizedBox(height: size.height * 0.025),
                 CircleAvatar(
-                  backgroundColor: const Color.fromRGBO(216, 207, 238, 100),
+                  backgroundColor: hasNotes
+                      ? Colors
+                          .green // Zmieniony kolor ikony, jeśli są wiadomości
+                      : const Color.fromRGBO(216, 207, 238, 100),
                   child: IconButton(
-                    onPressed: () {}, // Add functionality later
+                    onPressed: () {}, // Funkcjonalność dla ikony ogłoszeń
                     icon: const Icon(Icons.announcement),
                   ),
                 ),
@@ -61,7 +67,7 @@ class BaseLayout extends StatelessWidget {
                   backgroundImage:
                       const AssetImage('assets/images/user_image.jpg'),
                   child: IconButton(
-                    onPressed: () {}, // Add functionality later
+                    onPressed: () {}, // Funkcjonalność dla ikony użytkownika
                     icon: const Icon(Icons.person, color: Colors.transparent),
                   ),
                 ),
@@ -69,7 +75,7 @@ class BaseLayout extends StatelessWidget {
               ],
             ),
           ),
-          Container(
+          SizedBox(
             width: size.width * 0.95, // Zmienny element
             child: child,
           ),

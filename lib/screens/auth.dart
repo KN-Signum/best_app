@@ -31,7 +31,7 @@ class _LoginScreenState extends State<LoginScreen> {
     if (_password != _confirmPassword) {
       // Zgłoś błąd, jeśli hasła się nie zgadzają
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Hasła muszą się zgadzać!')),
+        const SnackBar(content: Text('Hasła muszą się zgadzać!')),
       );
       return;
     }
@@ -67,7 +67,7 @@ class _LoginScreenState extends State<LoginScreen> {
     } else {
       // Obsługa błędu
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Rejestracja nie powiodła się.')),
+        const SnackBar(content: Text('Rejestracja nie powiodła się.')),
       );
     }
   }
@@ -76,7 +76,7 @@ class _LoginScreenState extends State<LoginScreen> {
   void _submitLogin() async {
     if (_login == null || _password == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Proszę wprowadzić login i hasło.')),
+        const SnackBar(content: Text('Proszę wprowadzić login i hasło.')),
       );
       return;
     }
@@ -94,7 +94,7 @@ class _LoginScreenState extends State<LoginScreen> {
     } else {
       // Obsługa błędu
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Niepoprawne dane logowania.')),
+        const SnackBar(content: Text('Niepoprawne dane logowania.')),
       );
     }
   }
