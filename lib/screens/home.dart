@@ -1,19 +1,22 @@
+import 'package:best_app/services/api_service.dart';
 import 'package:best_app/widgets/base_layout.dart';
 import 'package:flutter/material.dart';
-import 'package:best_app/data/mock_annoucments.dart';
 import 'package:best_app/widgets/annoucment_widget.dart';
+import 'package:intl/intl.dart';
 
 import '../model/annoucment.dart';
 
 class Home extends StatefulWidget {
-  const Home({super.key});
+  Home({super.key, required this.userId});
+  final String? userId;
 
   @override
   _HomeState createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
-  List<Annoucment> announcements = mockAnnouncements; // Pełna lista ogłoszeń
+  ApiService apiService = ApiService();
+  List<Annoucment> announcements = []; // Pełna lista ogłoszeń
   List<Annoucment> filteredAnnouncements = []; // Przefiltrowana lista ogłoszeń
   String searchQuery = ""; // Przechowuje aktualne zapytanie wyszukiwania
 
@@ -26,24 +29,44 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    _sortAnnouncementsByDate(); // Domyślne sortowanie według daty
-    filteredAnnouncements = announcements; // Inicjalnie pełna lista
+    loadAnnouncements(); // Pobieranie ogłoszeń z API
+  }
+
+  // Pobieranie ogłoszeń z API
+  void loadAnnouncements() async {
+    try {
+      List<Annoucment> fetchedAnnouncements = await apiService.getAnnoucments();
+      setState(() {
+        announcements = fetchedAnnouncements;
+        filteredAnnouncements = announcements;
+        _sortAnnouncementsByDate(); // Sortowanie domyślne
+      });
+    } catch (e) {
+      print('Błąd podczas pobierania ogłoszeń: $e');
+    }
   }
 
   // Sortowanie ogłoszeń od najnowszych do najstarszych
   void _sortAnnouncementsByDate() {
-    announcements.sort((a, b) => b.date.compareTo(a.date));
+    // Użycie DateFormat do parsowania daty
+    final dateFormat = DateFormat('dd/MM/yyyy');
+
+    announcements.sort((a, b) {
+      DateTime dateA = dateFormat.parse(a.whenAdded); // Parsowanie a.whenAdded
+      DateTime dateB = dateFormat.parse(b.whenAdded); // Parsowanie b.whenAdded
+      return dateB
+          .compareTo(dateA); // Sortowanie od najnowszych do najstarszych
+    });
   }
 
   // Funkcja do filtrowania ogłoszeń na podstawie zapytania wyszukiwania
   void _filterAnnouncements() {
     setState(() {
-      // Filtruj po tytule i opisie na podstawie zapytania wyszukiwania
       filteredAnnouncements = announcements.where((announcement) {
         return announcement.title
                 .toLowerCase()
                 .contains(searchQuery.toLowerCase()) ||
-            announcement.description
+            announcement.abstract
                 .toLowerCase()
                 .contains(searchQuery.toLowerCase());
       }).toList();
@@ -84,7 +107,7 @@ Widget build(BuildContext context) {
                 textAlign: TextAlign.center, // Wyśrodkowanie tekstu
               ),
               const SizedBox(height: 10),
-              
+          
               // Informacje o autorze i dacie (teraz w Column)
               Column(
                 crossAxisAlignment: CrossAxisAlignment.center, // Wyśrodkowanie tekstu
@@ -113,6 +136,7 @@ Widget build(BuildContext context) {
                 child: CircleAvatar(
                   radius: 40, // Stała wielkość obrazka
                   backgroundImage: AssetImage(selectedAnnouncement!.image),
+
                 ),
               ),
               const SizedBox(height: 20),
@@ -142,9 +166,8 @@ Widget build(BuildContext context) {
         )
       : Container();
 
-    return 
-    Scaffold( 
-      backgroundColor:  const Color.fromRGBO(244, 242, 238, 100),
+    return Scaffold(
+      backgroundColor: const Color.fromRGBO(244, 242, 238, 100),
       body: BaseLayout(
       child: isDetailView
           ? detailContent // Wyświetl szczegóły ogłoszenia
@@ -180,94 +203,100 @@ Widget build(BuildContext context) {
                           child: Text('Wyszukiwanie',
                               style: TextStyle(fontSize: 20)),
                         ),
-                      ),
-                      Container(
-                        // to jest wyszukiwarka - wprowadzenie tekstu
-                        margin: const EdgeInsets.symmetric(horizontal: 20),
-                        decoration: BoxDecoration(
-                          color:   const Color.fromRGBO(216, 207, 238, 100),
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: TextFormField(
-                          controller: _searchController,
-                          decoration: const InputDecoration(
-                            hintText: '  Wyszukaj',
-                            contentPadding:
-                                EdgeInsets.symmetric(horizontal: 15),
-                            border: InputBorder.none, // Usuwa podkreślenie
+                      ],
+                    ),
+                    child: Column(
+                      children: [
+                        Container(
+                          color: Colors.transparent,
+                          margin: const EdgeInsets.all(10),
+                          child: const Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text('Wyszukiwanie',
+                                style: TextStyle(fontSize: 20)),
                           ),
-                          onChanged: (value) {
-                            setState(() {
-                              searchQuery =
-                                  value; // Aktualizuj zapytanie wyszukiwania
-                              _filterAnnouncements(); // Filtruj ogłoszenia
-                            });
-                          },
                         ),
-                      ),
-                      Container(
-                        // to jest kontener z ikonkami filtrowania
-                        color: Colors.transparent,
-                        margin: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 5),
-                        child: Row(
-                          children: [
-                            for (int i = 0; i < 21; i++)
-                              Container(
-                                margin:
-                                    const EdgeInsets.symmetric(horizontal: 5),
-                                child: CircleAvatar(
-                                  backgroundColor: Colors.blueGrey[300],
-                                  child: Center(
-                                    child: IconButton(
-                                      onPressed: () {
-                                        // Możliwość dodania filtrów w przyszłości
-                                      },
-                                      icon: const Icon(Icons.category),
+                        Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 20),
+                          decoration: BoxDecoration(
+                            color: const Color.fromRGBO(216, 207, 238, 100),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: TextFormField(
+                            controller: _searchController,
+                            decoration: const InputDecoration(
+                              hintText: '  Wyszukaj',
+                              contentPadding:
+                                  EdgeInsets.symmetric(horizontal: 15),
+                              border: InputBorder.none, // Usuwa podkreślenie
+                            ),
+                            onChanged: (value) {
+                              setState(() {
+                                searchQuery =
+                                    value; // Aktualizuj zapytanie wyszukiwania
+                                _filterAnnouncements(); // Filtruj ogłoszenia
+                              });
+                            },
+                          ),
+                        ),
+                        Container(
+                          color: Colors.transparent,
+                          margin: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 5),
+                          child: Row(
+                            children: [
+                              for (int i = 0; i < 21; i++)
+                                Container(
+                                  margin:
+                                      const EdgeInsets.symmetric(horizontal: 5),
+                                  child: CircleAvatar(
+                                    backgroundColor: Colors.blueGrey[300],
+                                    child: Center(
+                                      child: IconButton(
+                                        onPressed: () {
+                                          // Możliwość dodania filtrów w przyszłości
+                                        },
+                                        icon: const Icon(Icons.category),
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: Container(
-                    padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.02), 
-                    color:  const Color.fromRGBO(244, 242, 238, 100), 
-                    child: GridView.builder(
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 4,
-                        crossAxisSpacing: 10.0,
-                        mainAxisSpacing: 10.0,
-                        childAspectRatio: 1,
-                      ),
-                      itemCount: filteredAnnouncements.length,
-                      itemBuilder: (context, index) {
-                        return InkWell(
-                          onTap: () {
-                            _showAnnouncementDetails(
-                                filteredAnnouncements[index]);
-                          },
-                          child: AnnouncementTile(
-                            title: filteredAnnouncements[index].title,
-                            authorName: filteredAnnouncements[index].authorName,
-                            date: filteredAnnouncements[index].date,
-                            description:
-                                filteredAnnouncements[index].description,
+                            ],
                           ),
-                        );
-                      },
+                        ),
+                      ],
                     ),
                   ),
-                ),
-              ],
-            ),
-    )
+                  Expanded(
+                    child: Container(
+                      padding: EdgeInsets.all(
+                          MediaQuery.of(context).size.width * 0.02),
+                      color: const Color.fromRGBO(244, 242, 238, 100),
+                      child: GridView.builder(
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 4,
+                          crossAxisSpacing: 10.0,
+                          mainAxisSpacing: 10.0,
+                          childAspectRatio: 1,
+                        ),
+                        itemCount: filteredAnnouncements.length,
+                        itemBuilder: (context, index) {
+                          return InkWell(
+                            onTap: () {
+                              _showAnnouncementDetails(
+                                  filteredAnnouncements[index]);
+                            },
+                            child: AnnouncementTile(
+                                announcement: filteredAnnouncements[index]),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+      ),
     );
-    }
+  }
 }
