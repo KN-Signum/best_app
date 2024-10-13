@@ -30,22 +30,13 @@ void showAplicationDialog(BuildContext context, List<dynamic> myNotes) {
                         note['title'],
                         style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
-                      subtitle: Text('Zgłoszone przez: ${note['from']}'),
+                      subtitle: Text('Zgłoszone przez: ${note['owner']}'),
                       children: [
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(note['content']),
                         ),
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              // Tutaj możesz dodać akcję kontaktu, np. przekierowanie do czatu lub wysłania maila
-                              Navigator.of(context).pop(); // Zamyka dialog
-                            },
-                            child: const Text('Kontakt'),
-                          ),
-                        ),
+                        Text('Kontakt: 123456789, adres mailowy: mail@mail.com')
                       ],
                     );
                   },
