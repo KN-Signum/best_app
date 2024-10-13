@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../dialogs/add_annoucments_dialog.dart';
 import '../dialogs/show_application_dialog.dart';
+import '../dialogs/show_chat_dialog.dart';
 import '../screens/home.dart';
 
 class BaseLayout extends StatelessWidget {
@@ -76,7 +77,9 @@ class BaseLayout extends StatelessWidget {
                   backgroundImage:
                       const AssetImage('assets/images/user_image.jpg'),
                   child: IconButton(
-                    onPressed: () {}, // Funkcjonalność dla ikony użytkownika
+                    onPressed: () {
+                      showChatDialog(context);
+                    }, // Funkcjonalność dla ikony użytkownika
                     icon: const Icon(Icons.person, color: Colors.transparent),
                   ),
                 ),
