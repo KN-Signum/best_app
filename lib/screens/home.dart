@@ -158,72 +158,108 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     var detailContent = selectedAnnouncement != null
-        ? Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(selectedAnnouncement!.title,
-                  style: const TextStyle(
-                      fontSize: 24, fontWeight: FontWeight.bold)),
-              const SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('Autor: ${selectedAnnouncement!.owner}',
-                      style: const TextStyle(fontSize: 16)),
-                  Text('Data: ${selectedAnnouncement!.whenAdded}',
-                      style: const TextStyle(fontSize: 16)),
-                ],
-              ),
-              const SizedBox(height: 20),
-              Center(
-                child: CircleAvatar(
-                  radius: 40,
-                  backgroundImage:
-                      AssetImage(selectedAnnouncement!.ownerPicture),
+        ? Padding(
+            padding: EdgeInsets.only(
+                right: MediaQuery.of(context).size.width * 0.05),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(selectedAnnouncement!.title,
+                    style: const TextStyle(
+                        fontSize: 24, fontWeight: FontWeight.bold)),
+                const SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Autor: ${selectedAnnouncement!.owner}',
+                        style: const TextStyle(fontSize: 16)),
+                    Text('Data: ${selectedAnnouncement!.whenAdded}',
+                        style: const TextStyle(fontSize: 16)),
+                  ],
                 ),
-              ),
-              const SizedBox(height: 20),
-              const Text('Opis:',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-              const SizedBox(height: 10),
-              Text(selectedAnnouncement!.abstract,
-                  style: const TextStyle(fontSize: 16)),
-              TextFormField(controller: _messageController),
-              ElevatedButton(
-                onPressed: () async {
-                  String? ownerId = await ApiService()
-                      .getUserByUsername(selectedAnnouncement!.owner);
-                  if (ownerId != null) {
-                    bool success = await ApiService().sendApplicationNote(
-                      title: 'Aplikacja na ogłoszenie',
-                      content: _messageController.text,
-                      ownerId: widget.userId!,
-                      sendToId: ownerId,
-                    );
+                const SizedBox(height: 20),
+                Center(
+                  child: CircleAvatar(
+                    radius: 40,
+                    backgroundImage:
+                        AssetImage(selectedAnnouncement!.ownerPicture),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                const Text('Opis:',
+                    style:
+                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                const SizedBox(height: 20),
+                Text(selectedAnnouncement!.abstract,
+                    style: const TextStyle(fontSize: 16)),
+                const SizedBox(height: 20),
+                TextFormField(
+                  controller: _messageController,
+                  minLines: 5,
+                  maxLines: 5,
+                  decoration: const InputDecoration(
+                    labelText: 'Napisz wiadomość do ogłoszeniodawcy',
+                    labelStyle: TextStyle(),
+                    fillColor: Color.fromRGBO(230, 225, 242, 1),
+                    filled: true,
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(
+                          color: Color.fromARGB(255, 237, 224, 219),
+                          width: 2.0),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                          color: Color.fromARGB(255, 237, 224, 219),
+                          width: 2.0),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                          color: Color.fromARGB(255, 237, 224, 219),
+                          width: 2.0),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                SizedBox(
+                  width: double.infinity,
+                  height: 50,
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      String? ownerId = await ApiService()
+                          .getUserByUsername(selectedAnnouncement!.owner);
+                      if (ownerId != null) {
+                        bool success = await ApiService().sendApplicationNote(
+                          title: 'Aplikacja na ogłoszenie',
+                          content: _messageController.text,
+                          ownerId: widget.userId!,
+                          sendToId: ownerId,
+                        );
 
-                    if (success) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                            content: Text(
-                                'Notatka wysłana pomyślnie do właściciela ogłoszenia!')),
-                      );
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                            content: Text('Nie udało się wysłać notatki.')),
-                      );
-                    }
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                          content: Text(
-                              'Nie udało się pobrać danych właściciela ogłoszenia.')),
-                    );
-                  }
-                },
-                child: const Text('Aplikuj'),
-              ),
-            ],
+                        if (success) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text(
+                                    'Notatka wysłana pomyślnie do właściciela ogłoszenia!')),
+                          );
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text('Nie udało się wysłać notatki.')),
+                          );
+                        }
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                              content: Text(
+                                  'Nie udało się pobrać danych właściciela ogłoszenia.')),
+                        );
+                      }
+                    },
+                    child: const Text('Aplikuj'),
+                  ),
+                ),
+              ],
+            ),
           )
         : Container();
 
@@ -318,14 +354,14 @@ class _HomeState extends State<Home> {
                   Expanded(
                     child: Container(
                       padding: EdgeInsets.all(
-                          MediaQuery.of(context).size.width * 0.02),
+                          MediaQuery.of(context).size.width * 0.01),
                       color: const Color.fromRGBO(244, 242, 238, 100),
                       child: GridView.builder(
                         gridDelegate:
                             const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 4,
                           crossAxisSpacing: 10.0,
-                          mainAxisSpacing: 10.0,
+                          mainAxisSpacing: 15.0,
                           childAspectRatio: 1,
                         ),
                         itemCount: filteredAnnouncements.length,

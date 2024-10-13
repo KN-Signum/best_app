@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart'; // Potrzebne do limitu znaków
 import 'package:best_app/model/annoucmentToDb.dart';
 import '../screens/home.dart';
 import '../services/api_service.dart';
@@ -54,12 +55,21 @@ void showAddAnnouncementDialog(BuildContext context, String? userId) {
                 const SizedBox(height: 16),
                 TextField(
                   controller: titleController,
-                  decoration: const InputDecoration(labelText: 'Tytuł'),
+                  decoration: const InputDecoration(
+                    labelText: 'Tytuł',
+                    counterText: '',
+                  ),
+                  inputFormatters: [
+                    LengthLimitingTextInputFormatter(25), // Limit 25 znaków
+                  ],
                 ),
                 const SizedBox(height: 5),
                 TextField(
                   controller: abstractController,
                   decoration: const InputDecoration(labelText: 'Streszczenie'),
+                  inputFormatters: [
+                    LengthLimitingTextInputFormatter(100), // Limit 100 znaków
+                  ],
                   maxLines: 2,
                   minLines: 2,
                 ),
@@ -67,6 +77,9 @@ void showAddAnnouncementDialog(BuildContext context, String? userId) {
                 TextField(
                   controller: fullTextController,
                   decoration: const InputDecoration(labelText: 'Pełny tekst'),
+                  inputFormatters: [
+                    LengthLimitingTextInputFormatter(250), // Limit 250 znaków
+                  ],
                   minLines: 4,
                   maxLines: 4,
                 ),
