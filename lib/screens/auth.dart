@@ -31,7 +31,7 @@ class _LoginScreenState extends State<LoginScreen> {
     if (_password != _confirmPassword) {
       // Zgłoś błąd, jeśli hasła się nie zgadzają
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Hasła muszą się zgadzać!')),
+        const SnackBar(content: Text('Passwords do not match.')),
       );
       return;
     }
@@ -40,7 +40,7 @@ class _LoginScreenState extends State<LoginScreen> {
     UserToDb newUser = UserToDb(
       name: _firstName ?? '',
       surname: _lastName ?? '',
-      bio: _bio ?? 'Użytkownik nie podał bio.', // Przykładowy bio
+      bio: _bio ?? 'User didnt provide any bio', // Przykładowy bio
       tags: _tags.isNotEmpty
           ? _tags
           : ['General'], // Przykładowe tagi, jeśli brak
@@ -67,7 +67,7 @@ class _LoginScreenState extends State<LoginScreen> {
     } else {
       // Obsługa błędu
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Rejestracja nie powiodła się.')),
+        const SnackBar(content: Text('Registration failed.')),
       );
     }
   }
@@ -76,7 +76,7 @@ class _LoginScreenState extends State<LoginScreen> {
   void _submitLogin() async {
     if (_login == null || _password == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Proszę wprowadzić login i hasło.')),
+        const SnackBar(content: Text('Please fill in all fields.')),
       );
       return;
     }
@@ -94,7 +94,7 @@ class _LoginScreenState extends State<LoginScreen> {
     } else {
       // Obsługa błędu
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Niepoprawne dane logowania.')),
+        const SnackBar(content: Text('Incorrect login or password.')),
       );
     }
   }
@@ -147,7 +147,7 @@ class _LoginScreenState extends State<LoginScreen> {
         ? Column(
             children: [
               Text(
-                'Logowanie',
+                'Login',
                 style: TextStyle(
                   fontSize: isSmallScreen ? 22 : 28,
                   fontWeight: FontWeight.bold,
@@ -160,7 +160,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 onChanged: (value) => _login = value,
               ),
               _buildTextField(
-                hintText: 'Hasło',
+                hintText: 'Password',
                 isPassword: true,
                 onChanged: (value) => _password = value,
               ),
@@ -177,7 +177,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 : null,
             steps: <Step>[
               Step(
-                title: const Text('Podstawowe dane'),
+                title: const Text('Basic data'),
                 isActive: _currentStep >= 0,
                 state:
                     _currentStep > 0 ? StepState.complete : StepState.indexed,
@@ -195,22 +195,22 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
               Step(
-                title: const Text('Dane osobowe'),
+                title: const Text('Personal data'),
                 isActive: _currentStep >= 1,
                 state:
                     _currentStep > 1 ? StepState.complete : StepState.indexed,
                 content: Column(
                   children: [
                     _buildTextField(
-                      hintText: 'Imię',
+                      hintText: 'Name',
                       onChanged: (value) => _firstName = value,
                     ),
                     _buildTextField(
-                      hintText: 'Nazwisko',
+                      hintText: 'Surname',
                       onChanged: (value) => _lastName = value,
                     ),
                     _buildTextField(
-                      hintText: 'Numer telefonu',
+                      hintText: 'Phone number',
                       onChanged: (value) => _phoneNumber = value,
                     ),
                     _buildTextField(
@@ -218,7 +218,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       onChanged: (value) => _bio = value,
                     ),
                     _buildTextField(
-                      hintText: 'Tagi (oddzielone przecinkami)', // Pole tagów
+                      hintText: 'Tags (with coma separator)', // Pole tagów
                       onChanged: (value) => _tags =
                           value.split(',').map((e) => e.trim()).toList(),
                     ),
@@ -226,19 +226,19 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
               Step(
-                title: const Text('Hasło'),
+                title: const Text('Password'),
                 isActive: _currentStep >= 2,
                 state:
                     _currentStep > 2 ? StepState.complete : StepState.indexed,
                 content: Column(
                   children: [
                     _buildTextField(
-                      hintText: 'Hasło',
+                      hintText: 'Password',
                       isPassword: true,
                       onChanged: (value) => _password = value,
                     ),
                     _buildTextField(
-                      hintText: 'Potwierdź hasło',
+                      hintText: 'Confirm password',
                       isPassword: true,
                       onChanged: (value) => _confirmPassword = value,
                     ),
@@ -246,7 +246,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
               Step(
-                title: const Text('Przegląd'),
+                title: const Text('Review'),
                 isActive: _currentStep >= 3,
                 state:
                     _currentStep > 3 ? StepState.complete : StepState.indexed,
@@ -255,11 +255,11 @@ class _LoginScreenState extends State<LoginScreen> {
                   children: [
                     _buildReviewRow('Login', _login),
                     _buildReviewRow('Email', _email),
-                    _buildReviewRow('Imię', _firstName),
-                    _buildReviewRow('Nazwisko', _lastName),
-                    _buildReviewRow('Numer telefonu', _phoneNumber),
+                    _buildReviewRow('Name', _firstName),
+                    _buildReviewRow('Surname', _lastName),
+                    _buildReviewRow('Phone number', _phoneNumber),
                     _buildReviewRow('Bio', _bio),
-                    _buildReviewRow('Tagi', _tags.join(', ')),
+                    _buildReviewRow('Tags', _tags.join(', ')),
                   ],
                 ),
               ),
@@ -315,7 +315,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 15),
                     child: Text(
-                      isLogin ? 'Zaloguj się' : 'Zarejestruj się',
+                      isLogin ? 'Login' : 'Register',
                       style: TextStyle(
                         fontSize: isSmallScreen ? 16 : 18,
                         color: Colors.white,
@@ -333,8 +333,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 },
                 child: Text(
                   isLogin
-                      ? 'Nie posiadasz konta? Zarejestruj się'
-                      : 'Masz już konto? Zaloguj się',
+                      ? 'You don\'t have an account? Register'
+                      : 'Have an account? Login',
                   style: const TextStyle(color: Colors.white),
                 ),
               ),

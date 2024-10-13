@@ -225,7 +225,7 @@ class _HomeState extends State<Home> {
         : Container();
 
     return Scaffold(
-    backgroundColor:  const Color.fromARGB(156, 190, 173, 233),
+    backgroundColor: const Color.fromARGB(156, 249, 249, 249),
       body: BaseLayout(
         userId: widget.userId,
         myNotes: myNotes,
@@ -257,7 +257,7 @@ class _HomeState extends State<Home> {
                           margin: const EdgeInsets.all(10),
                           child: const Align(
                             alignment: Alignment.centerLeft,
-                            child: Text('      Wyszukiwanie',
+                            child: Text('      Announcements browser',
                                 style: TextStyle(fontSize: 20)),
                           ),
                         ),
@@ -270,7 +270,7 @@ class _HomeState extends State<Home> {
                           child: TextFormField(
                             controller: _searchController,
                             decoration: const InputDecoration(
-                              hintText: '      Wyszukaj',
+                              hintText: '      search announcements...',
                               contentPadding:
                                   EdgeInsets.symmetric(horizontal: 15),
                               border: InputBorder.none,
@@ -289,7 +289,7 @@ class _HomeState extends State<Home> {
                           child: Row(
                             children: [
                               SizedBox(width: 15),
-                              const Text("  Filtry: "),
+                              const Text("  Filters: "),
                               DropdownButton<String>(
                                 value: selectedFilter,
                                 icon: const Icon(Icons.arrow_drop_down),

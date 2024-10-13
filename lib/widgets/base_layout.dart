@@ -25,12 +25,15 @@ class BaseLayout extends StatelessWidget {
       backgroundColor: const Color.fromRGBO(244, 242, 238, 100),
       appBar: AppBar(
         leading: IconButton(
-          icon: Image.asset(
-            'assets/images/logo.png',
-            width: 30, // Możesz dostosować rozmiar
-            height: 30,
-            fit: BoxFit.cover,
-          ),
+      icon: Image.asset(
+        'assets/images/logo.png',
+        width: 30, // Możesz dostosować rozmiar
+        height: 30,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return const Icon(Icons.home); // Ikona wyświetlana, gdy logo się nie ładuje
+        },
+      ),
 
           onPressed: () => Navigator.of(context).pushReplacement(
             MaterialPageRoute(
