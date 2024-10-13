@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(OnBording());
+  runApp(const OnBording());
 }
 
 class OnBording extends StatelessWidget {
+  const OnBording({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -13,21 +15,23 @@ class OnBording extends StatelessWidget {
         fontFamily: 'Roboto',
         primarySwatch: Colors.purple,
         textTheme: TextTheme(
-          headlineLarge: TextStyle(fontSize: 40, fontWeight: FontWeight.bold, color: Colors.black),
-          headlineMedium: TextStyle(fontSize: 30, fontWeight: FontWeight.w600, color: Colors.black87),
+          headlineLarge: const TextStyle(fontSize: 40, fontWeight: FontWeight.bold, color: Colors.black),
+          headlineMedium: const TextStyle(fontSize: 30, fontWeight: FontWeight.w600, color: Colors.black87),
           bodyLarge: TextStyle(fontSize: 18, color: Colors.grey[800]),
           bodyMedium: TextStyle(fontSize: 16, color: Colors.grey[600]),
         ),
       ),
       initialRoute: '/',
       routes: {
-        '/': (context) => OnboardingPage(),
+        '/': (context) => const OnboardingPage(),
       },
     );
   }
 }
 
 class OnboardingPage extends StatelessWidget {
+  const OnboardingPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -65,8 +69,8 @@ class OnboardingPage extends StatelessWidget {
             const SizedBox(height: 40),
 
             // Sekcja "Funkcje"
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20),
               child: Wrap(
                 spacing: 30.0,
                 runSpacing: 30.0,
@@ -110,7 +114,7 @@ class OnboardingPage extends StatelessWidget {
                   const SizedBox(height: 20),
 
                   // Dodanie obrazków i tekstów w stylu kart
-                  Row(
+                  const Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       AboutCard(
@@ -126,7 +130,7 @@ class OnboardingPage extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 20),
-                  Row(
+                  const Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       AboutCard(
@@ -158,7 +162,7 @@ class OnboardingCard extends StatelessWidget {
   final String title;
   final String description;
 
-  OnboardingCard({
+  const OnboardingCard({super.key, 
     required this.icon,
     required this.title,
     required this.description,

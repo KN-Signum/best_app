@@ -64,7 +64,7 @@ class BaseLayout extends StatelessWidget {
               ],
             ),
           ),
-          Container(
+          SizedBox(
             // to jest po kliknięciu w ogłoszenie 
             width: size.width * 0.95, // Zmienny element
             child: child,

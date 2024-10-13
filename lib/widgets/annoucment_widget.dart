@@ -7,7 +7,7 @@ class AnnouncementTile extends StatelessWidget {
   final String imageUrl;
   final String description;
 
-  AnnouncementTile({
+  const AnnouncementTile({super.key, 
     required this.title,
     required this.authorName,
     required this.date, // Użyj DateTime
