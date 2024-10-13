@@ -87,56 +87,17 @@ class _HomeState extends State<Home> {
     });
   }
 
-  // Funkcja do filtrowania ogłoszeń na podstawie zapytania wyszukiwania
-  void _filterAnnouncements() {
-    setState(() {
-      filteredAnnouncements = announcements.where((announcement) {
-        // Filtrowanie według wybranego filtra
-        switch (selectedFilter) {
-          case 'title':
-            return announcement.title
-                .toLowerCase()
-                .contains(searchQuery.toLowerCase());
-          case 'owner':
-            return announcement.owner
-                .toLowerCase()
-                .contains(searchQuery.toLowerCase());
-          case 'tags':
-            return announcement.tags
-                .join(', ')
-                .toLowerCase()
-                .contains(searchQuery.toLowerCase());
-          case 'location':
-            return announcement.location
-                .toLowerCase()
-                .contains(searchQuery.toLowerCase());
-          case 'working_type':
-            return announcement.workingType
-                .toLowerCase()
-                .contains(searchQuery.toLowerCase());
-          case 'level_of_experience':
-            return announcement.levelOfExperience
-                .toLowerCase()
-                .contains(searchQuery.toLowerCase());
-          case 'requirements':
-            return announcement.requirements
-                .join(', ')
-                .toLowerCase()
-                .contains(searchQuery.toLowerCase());
-          case 'owner_type':
-            return announcement.ownerType
-                .toLowerCase()
-                .contains(searchQuery.toLowerCase());
-          case 'popularity':
-            // Przykladowo: sortowanie na podstawie popularności (liczba wyświetleń)
-            return true; // Wybór filtrowania dla popularności wymaga dodatkowej logiki
-          case 'last_added':
-            return true; // Można tu dodać logikę do filtrowania według ostatnio dodanych
-          default:
-            return true;
-        }
-      }).toList();
-    });
+  void _filterAnnouncements() async {
+    try {
+      // Wysyłamy zapytanie do API Service, przekazując typ filtra i zapytanie
+      List<Annoucment> searchResults =
+          await apiService.searchAnnouncements(selectedFilter, searchQuery);
+      setState(() {
+        filteredAnnouncements = searchResults;
+      });
+    } catch (e) {
+      print('Błąd podczas wyszukiwania ogłoszeń: $e');
+    }
   }
 
   // Zmiana widoku na szczegóły ogłoszenia
@@ -361,7 +322,7 @@ class _HomeState extends State<Home> {
                             const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 4,
                           crossAxisSpacing: 10.0,
-                          mainAxisSpacing: 15.0,
+                          mainAxisSpacing: 10.0,
                           childAspectRatio: 1,
                         ),
                         itemCount: filteredAnnouncements.length,

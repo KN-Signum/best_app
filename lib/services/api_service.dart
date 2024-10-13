@@ -223,4 +223,32 @@ class ApiService {
       return [];
     }
   }
+
+  // Funkcja do wyszukiwania ogłoszeń
+  Future<List<Annoucment>> searchAnnouncements(
+      String searchType, String searchQuery) async {
+    final url = Uri.parse('$_baseUrl/search/$searchType/$searchQuery');
+
+    try {
+      final response = await http.get(
+        url,
+        headers: {
+          'accept': 'application/json',
+          "ngrok-skip-browser-warning": "true"
+        },
+      );
+
+      if (response.statusCode == 200) {
+        List<dynamic> data = jsonDecode(response.body);
+
+        // Jeśli odpowiedź zawiera listę wyników, zwróć listę ogłoszeń
+        return data.map((json) => Annoucment.fromJson(json)).toList();
+      } else {
+        throw Exception(
+            'Failed to fetch search results: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Error while fetching search results: $e');
+    }
+  }
 }

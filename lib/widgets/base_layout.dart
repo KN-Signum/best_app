@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../dialogs/add_annoucments_dialog.dart';
+import '../dialogs/show_application_dialog.dart';
 import '../screens/home.dart';
 
 class BaseLayout extends StatelessWidget {
@@ -23,7 +24,13 @@ class BaseLayout extends StatelessWidget {
       backgroundColor: const Color.fromRGBO(244, 242, 238, 100),
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.home),
+          icon: Image.asset(
+            'assets/images/logo.png',
+            width: 30, // Możesz dostosować rozmiar
+            height: 30,
+            fit: BoxFit.cover,
+          ),
+
           onPressed: () => Navigator.of(context).pushReplacement(
             MaterialPageRoute(
                 builder: (context) =>
@@ -58,7 +65,9 @@ class BaseLayout extends StatelessWidget {
                           .green // Zmieniony kolor ikony, jeśli są wiadomości
                       : const Color.fromRGBO(216, 207, 238, 100),
                   child: IconButton(
-                    onPressed: () {}, // Funkcjonalność dla ikony ogłoszeń
+                    onPressed: () {
+                      showAplicationDialog(context, myNotes);
+                    }, // Funkcjonalność dla ikony ogłoszeń
                     icon: const Icon(Icons.announcement),
                   ),
                 ),
