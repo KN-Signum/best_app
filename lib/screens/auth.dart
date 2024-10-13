@@ -108,7 +108,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10),
       decoration: BoxDecoration(
-        color: Colors.blueGrey[100],
+        color: const Color.fromARGB(156, 249, 249, 249),
         borderRadius: BorderRadius.circular(15),
       ),
       child: TextFormField(
@@ -267,7 +267,7 @@ class _LoginScreenState extends State<LoginScreen> {
           );
 
     return Scaffold(
-      backgroundColor: Colors.blueGrey[200],
+      backgroundColor: const Color.fromARGB(156, 190, 173, 233),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -280,7 +280,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ? size.height * (isSmallScreen ? 0.55 : 0.5)
               : size.height * (isSmallScreen ? 0.75 : 0.8),
           decoration: BoxDecoration(
-            color: Colors.blueGrey[300],
+            color: const Color.fromARGB(156, 190, 173, 233),
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
@@ -300,7 +300,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 width: double.maxFinite,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blueGrey[700],
+                    backgroundColor: const Color.fromARGB(156, 164, 137, 234),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15),
                     ),

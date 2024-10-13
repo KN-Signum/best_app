@@ -225,7 +225,7 @@ class _HomeState extends State<Home> {
         : Container();
 
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(244, 242, 238, 100),
+    backgroundColor:  const Color.fromARGB(156, 190, 173, 233),
       body: BaseLayout(
         userId: widget.userId,
         myNotes: myNotes,
