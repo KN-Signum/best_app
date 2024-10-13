@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart'; // Potrzebne do limitu znaków
+import 'package:flutter/services.dart'; // Needed for character limit
 import 'package:best_app/model/annoucmentToDb.dart';
 import '../screens/home.dart';
 import '../services/api_service.dart';
@@ -15,18 +15,18 @@ void showAddAnnouncementDialog(BuildContext context, String? userId) {
       TextEditingController();
   final TextEditingController requirementsController = TextEditingController();
 
-  bool isActive = true; // Przełącznik stanu ogłoszenia (aktywne lub nieaktywne)
+  bool isActive = true; // Toggle switch for active/inactive announcement
 
-  // Funkcja do wysłania ogłoszenia
+  // Function to submit the announcement
   void submitAnnouncement(AnnoucmentToDb annoucment) async {
     bool success = await ApiService().addAnnouncement(annoucment);
     if (success) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Ogłoszenie zostało dodane!')),
+        const SnackBar(content: Text('Announcement has been added!')),
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Nie udało się dodać ogłoszenia.')),
+        const SnackBar(content: Text('Failed to add announcement.')),
       );
     }
   }
@@ -49,26 +49,26 @@ void showAddAnnouncementDialog(BuildContext context, String? userId) {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  'Dodaj nowe ogłoszenie',
+                  'Add New Announcement',
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 16),
                 TextField(
                   controller: titleController,
                   decoration: const InputDecoration(
-                    labelText: 'Tytuł',
+                    labelText: 'Title',
                     counterText: '',
                   ),
                   inputFormatters: [
-                    LengthLimitingTextInputFormatter(25), // Limit 25 znaków
+                    LengthLimitingTextInputFormatter(25), // Limit to 25 characters
                   ],
                 ),
                 const SizedBox(height: 5),
                 TextField(
                   controller: abstractController,
-                  decoration: const InputDecoration(labelText: 'Streszczenie'),
+                  decoration: const InputDecoration(labelText: 'Abstract'),
                   inputFormatters: [
-                    LengthLimitingTextInputFormatter(100), // Limit 100 znaków
+                    LengthLimitingTextInputFormatter(100), // Limit to 100 characters
                   ],
                   maxLines: 2,
                   minLines: 2,
@@ -76,9 +76,9 @@ void showAddAnnouncementDialog(BuildContext context, String? userId) {
                 const SizedBox(height: 5),
                 TextField(
                   controller: fullTextController,
-                  decoration: const InputDecoration(labelText: 'Pełny tekst'),
+                  decoration: const InputDecoration(labelText: 'Full Text'),
                   inputFormatters: [
-                    LengthLimitingTextInputFormatter(250), // Limit 250 znaków
+                    LengthLimitingTextInputFormatter(250), // Limit to 250 characters
                   ],
                   minLines: 4,
                   maxLines: 4,
@@ -86,39 +86,39 @@ void showAddAnnouncementDialog(BuildContext context, String? userId) {
                 const SizedBox(height: 5),
                 TextField(
                   controller: locationController,
-                  decoration: const InputDecoration(labelText: 'Lokalizacja'),
+                  decoration: const InputDecoration(labelText: 'Location'),
                 ),
                 const SizedBox(height: 5),
                 TextField(
                   controller: tagsController,
                   decoration: const InputDecoration(
-                    labelText: 'Tagi (oddzielone przecinkami)',
+                    labelText: 'Tags (separated by commas)',
                   ),
                 ),
                 const SizedBox(height: 5),
                 TextField(
                   controller: workingTypeController,
                   decoration: const InputDecoration(
-                    labelText: 'Rodzaj pracy (FullTime/PartTime)',
+                    labelText: 'Working Type (FullTime/PartTime)',
                   ),
                 ),
                 const SizedBox(height: 5),
                 TextField(
                   controller: levelOfExperienceController,
                   decoration: const InputDecoration(
-                    labelText: 'Poziom doświadczenia (Entry/Mid/Senior)',
+                    labelText: 'Level of Experience (Entry/Mid/Senior)',
                   ),
                 ),
                 const SizedBox(height: 5),
                 TextField(
                   controller: requirementsController,
                   decoration: const InputDecoration(
-                    labelText: 'Wymagania (oddzielone przecinkami)',
+                    labelText: 'Requirements (separated by commas)',
                   ),
                 ),
                 const SizedBox(height: 5),
                 SwitchListTile(
-                  title: const Text('Aktywne ogłoszenie'),
+                  title: const Text('Active Announcement'),
                   value: isActive,
                   onChanged: (bool value) {
                     isActive = value;
@@ -131,12 +131,12 @@ void showAddAnnouncementDialog(BuildContext context, String? userId) {
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
-                      child: const Text('Anuluj'),
+                      child: const Text('Cancel'),
                     ),
                     const SizedBox(width: 8),
                     ElevatedButton(
                       onPressed: () {
-                        // Tworzenie obiektu AnnoucmentToDb z danych formularza
+                        // Creating AnnoucmentToDb object from form data
                         AnnoucmentToDb newAnnouncement = AnnoucmentToDb(
                           title: titleController.text,
                           abstract: abstractController.text,
@@ -145,7 +145,7 @@ void showAddAnnouncementDialog(BuildContext context, String? userId) {
                               .split(',')
                               .map((tag) => tag.trim())
                               .toList(),
-                          ownerId: userId!, // Przekazanie userId
+                          ownerId: userId!, // Pass userId
                           location: locationController.text,
                           workingType: workingTypeController.text,
                           levelOfExperience: levelOfExperienceController.text,
@@ -155,7 +155,7 @@ void showAddAnnouncementDialog(BuildContext context, String? userId) {
                               .toList(),
                         );
 
-                        // Wywołanie funkcji submitAnnouncement do wysłania ogłoszenia do API
+                        // Call submitAnnouncement to send the announcement to the API
                         submitAnnouncement(newAnnouncement);
 
                         Navigator.of(context).pushReplacement(
@@ -163,7 +163,7 @@ void showAddAnnouncementDialog(BuildContext context, String? userId) {
                               builder: (context) => Home(userId: userId)),
                         );
                       },
-                      child: const Text('Dodaj'),
+                      child: const Text('Add'),
                     ),
                   ],
                 ),

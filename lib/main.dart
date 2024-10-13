@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
-      home: const Home(userId: 'da7807a5aa6d9b3586b1c38a477121c3',),
+      home: const LoginScreen(),
     );
   }
 }
