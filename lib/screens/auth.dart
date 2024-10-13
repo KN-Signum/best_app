@@ -15,7 +15,6 @@ class _LoginScreenState extends State<LoginScreen> {
   bool isLogin = true;
   int _currentStep = 0;
 
-  // Dane formularza
   String? _login,
       _email,
       _password,
@@ -23,56 +22,46 @@ class _LoginScreenState extends State<LoginScreen> {
       _firstName,
       _lastName,
       _phoneNumber,
-      _bio; // Dodaj bio
-  List<String> _tags = []; // Dodaj tagi (domyślnie pusta lista)
+      _bio;
+  List<String> _tags = [];
 
-  // Metoda do obsługi zakończenia rejestracji
+  // Rejestracja
   void _submitRegistration() async {
     if (_password != _confirmPassword) {
-      // Zgłoś błąd, jeśli hasła się nie zgadzają
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Hasła muszą się zgadzać!')),
       );
       return;
     }
 
-    // Stwórz użytkownika na podstawie wprowadzonych danych
     UserToDb newUser = UserToDb(
       name: _firstName ?? '',
       surname: _lastName ?? '',
-      bio: _bio ?? 'Użytkownik nie podał bio.', // Przykładowy bio
-      tags: _tags.isNotEmpty
-          ? _tags
-          : ['General'], // Przykładowe tagi, jeśli brak
+      bio: _bio ?? 'Użytkownik nie podał bio.',
+      tags: _tags.isNotEmpty ? _tags : ['General'],
       email: _email ?? '',
       username: _login ?? '',
-      profilePicture: 'default_profile', // Przykładowy obraz
-      howManyRequests: 0, // Domyślnie zero zapytań
-      userType: 'Student', // Domyślny typ użytkownika
-      academicalIndex: 'N/A', // Domyślna wartość indeksu akademickiego
+      profilePicture: 'default_profile',
+      howManyRequests: 0,
+      userType: 'Student',
+      academicalIndex: 'N/A',
     );
 
-    // Wywołanie API do stworzenia użytkownika
     bool success = await ApiService().createUser(newUser, _password ?? '');
 
     if (success) {
       String? userId = await ApiService().getUserByUsername(_login!);
-      // Po pomyślnej rejestracji, przejdź do strony Home
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-            builder: (context) => Home(
-                  userId: userId,
-                )), // Przejście do Home
+        MaterialPageRoute(builder: (context) => Home(userId: userId)),
       );
     } else {
-      // Obsługa błędu
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Rejestracja nie powiodła się.')),
       );
     }
   }
 
-  // Metoda do obsługi logowania
+  // Logowanie
   void _submitLogin() async {
     if (_login == null || _password == null) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -81,18 +70,14 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
 
-    // Wywołanie API do walidacji użytkownika
     bool success = await ApiService().validateUser(_login!, _password!);
 
     if (success) {
       String? userId = await ApiService().getUserByUsername(_login!);
-      // Po pomyślnej walidacji, przejdź do strony Home
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-            builder: (context) => Home(userId: userId)), // Przejście do Home
+        MaterialPageRoute(builder: (context) => Home(userId: userId)),
       );
     } else {
-      // Obsługa błędu
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Niepoprawne dane logowania.')),
       );
@@ -108,7 +93,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10),
       decoration: BoxDecoration(
-        color: Colors.blueGrey[100],
+        color: const Color.fromRGBO(244, 242, 238, 100),
         borderRadius: BorderRadius.circular(15),
       ),
       child: TextFormField(
@@ -123,7 +108,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  // Widget do wyświetlania podsumowania danych w przeglądzie
+  // Widget do wyświetlania podsumowania danych
   Widget _buildReviewRow(String label, String? value) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5),
@@ -142,7 +127,6 @@ class _LoginScreenState extends State<LoginScreen> {
     final Size size = MediaQuery.of(context).size;
     final bool isSmallScreen = size.width < 600;
 
-    // Zmienna content zależna od stanu isLogin
     Widget content = isLogin
         ? Column(
             children: [
@@ -151,7 +135,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 style: TextStyle(
                   fontSize: isSmallScreen ? 22 : 28,
                   fontWeight: FontWeight.bold,
-                  color: Colors.white,
+                  color: Colors.black,
                 ),
               ),
               const SizedBox(height: 30),
@@ -214,11 +198,11 @@ class _LoginScreenState extends State<LoginScreen> {
                       onChanged: (value) => _phoneNumber = value,
                     ),
                     _buildTextField(
-                      hintText: 'Bio', // Pole bio
+                      hintText: 'Bio',
                       onChanged: (value) => _bio = value,
                     ),
                     _buildTextField(
-                      hintText: 'Tagi (oddzielone przecinkami)', // Pole tagów
+                      hintText: 'Tagi (oddzielone przecinkami)',
                       onChanged: (value) => _tags =
                           value.split(',').map((e) => e.trim()).toList(),
                     ),
@@ -267,78 +251,80 @@ class _LoginScreenState extends State<LoginScreen> {
           );
 
     return Scaffold(
-      backgroundColor: Colors.blueGrey[200],
+      backgroundColor: const Color.fromRGBO(244, 242, 238, 100),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: Center(
-        child: Container(
-          padding: const EdgeInsets.all(10),
-          width: isSmallScreen ? size.width * 0.9 : size.width * 0.6,
-          height: isLogin
-              ? size.height * (isSmallScreen ? 0.55 : 0.5)
-              : size.height * (isSmallScreen ? 0.75 : 0.8),
-          decoration: BoxDecoration(
-            color: Colors.blueGrey[300],
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.2),
-                blurRadius: 10,
-                offset: const Offset(0, 5),
-              ),
-            ],
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              content,
-              const SizedBox(height: 20),
-              SizedBox(
-                width: double.maxFinite,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blueGrey[700],
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
-                    ),
+      body: SingleChildScrollView( // Dodanie przewijania całego ekranu
+        child: Center(
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: size.height * 0.15), // Zmniejszenie marginesów góra/dół
+            child: Container(
+              padding: const EdgeInsets.all(10),
+              width: isSmallScreen ? size.width * 0.9 : size.width * 0.6,
+              decoration: BoxDecoration(
+                color: const Color.fromRGBO(216, 207, 238, 100),
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.2),
+                    blurRadius: 10,
+                    offset: const Offset(0, 5),
                   ),
-                  onPressed: () {
-                    if (isLogin) {
-                      _submitLogin();
-                    } else {
-                      _submitRegistration();
-                    }
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 15),
-                    child: Text(
-                      isLogin ? 'Zaloguj się' : 'Zarejestruj się',
-                      style: TextStyle(
-                        fontSize: isSmallScreen ? 16 : 18,
-                        color: Colors.white,
+                ],
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  content,
+                  const SizedBox(height: 20),
+                  SizedBox(
+                    width: double.maxFinite,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color.fromARGB(134, 216, 207, 238),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                      ),
+                      onPressed: () {
+                        if (isLogin) {
+                          _submitLogin();
+                        } else {
+                          _submitRegistration();
+                        }
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 15),
+                        child: Text(
+                          isLogin ? 'Zaloguj się' : 'Zarejestruj się',
+                          style: TextStyle(
+                            fontSize: isSmallScreen ? 16 : 18,
+                            color: Colors.white,
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                ),
+                  TextButton(
+                    onPressed: () {
+                      setState(() {
+                        isLogin = !isLogin;
+                        _currentStep = 0;
+                      });
+                    },
+                    child: Text(
+                      isLogin
+                          ? 'Nie posiadasz konta? Zarejestruj się'
+                          : 'Masz już konto? Zaloguj się',
+                      style: const TextStyle(color: Colors.purple),
+                    ),
+                  ),
+                ],
               ),
-              TextButton(
-                onPressed: () {
-                  setState(() {
-                    isLogin = !isLogin; // Zmień stan na przeciwny
-                    _currentStep = 0; // Reset kroków w Stepper
-                  });
-                },
-                child: Text(
-                  isLogin
-                      ? 'Nie posiadasz konta? Zarejestruj się'
-                      : 'Masz już konto? Zaloguj się',
-                  style: const TextStyle(color: Colors.white),
-                ),
-              ),
-            ],
+            ),
           ),
         ),
       ),
