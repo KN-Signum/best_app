@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import '../services/api_service.dart'; // Zakładam, że masz dostęp do ApiService
 
 void showChatDialog(BuildContext context) {
   bool isResponseReceived = false; // Kontrola, czy odpowiedź została otrzymana
+  bool isLoading = false; // Kontrola ładowania odpowiedzi
+  String aiResponse = ''; // Przechowywanie odpowiedzi AI
   final TextEditingController textController = TextEditingController();
 
   showDialog(
@@ -23,7 +26,7 @@ void showChatDialog(BuildContext context) {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    'Czat',
+                    'Chat with AI',
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 16),
@@ -32,30 +35,49 @@ void showChatDialog(BuildContext context) {
                     minLines: 3, // Minimalna liczba wierszy
                     maxLines: 3, // Maksymalna liczba wierszy
                     decoration: const InputDecoration(
-                      labelText: 'Twoja wiadomość',
+                      labelText: 'Your message',
                       border: OutlineInputBorder(),
                     ),
                   ),
                   const SizedBox(height: 20),
                   ElevatedButton(
-                    onPressed: () {
-                      // Po kliknięciu przycisku zmień stan i pokaż odpowiedź
+                    onPressed: () async {
+                      // Uruchomienie stanu ładowania
+                      setState(() {
+                        isLoading = true;
+                        isResponseReceived = false;
+                        aiResponse = '';
+                      });
+
+                      // Wywołanie API
+                      String response =
+                          await ApiService().askAi(textController.text);
+
+                      // Po otrzymaniu odpowiedzi, zmieniamy stan i pokazujemy wynik
                       setState(() {
                         isResponseReceived = true;
+                        isLoading = false;
+                        aiResponse = response;
                       });
                     },
-                    child: const Text('Zatwierdź'),
+                    child: const Text('Apply'),
                   ),
                   const SizedBox(height: 20),
-                  if (isResponseReceived)
+                  // Sekcja ładowania lub wyświetlania odpowiedzi
+                  if (isLoading)
+                    const Center(
+                      child:
+                          CircularProgressIndicator(), // Pokazujemy loader podczas ładowania
+                    )
+                  else if (isResponseReceived)
                     Expanded(
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Expanded(
                             flex: 2,
                             child: Text(
-                              'Odpowiedź:',
+                              'Response:',
                               style: TextStyle(fontSize: 16),
                             ),
                           ),
@@ -63,9 +85,11 @@ void showChatDialog(BuildContext context) {
                           Expanded(
                             flex: 3,
                             child: Container(
-                              width: 100,
-                              height: 100,
-                              color: Colors.blue, // Przykładowy kafelek
+                              padding: const EdgeInsets.all(10),
+                              child: Text(
+                                aiResponse, // Wyświetlamy odpowiedź z API
+                                style: const TextStyle(fontSize: 16),
+                              ),
                             ),
                           ),
                         ],

@@ -209,7 +209,6 @@ class ApiService {
           "ngrok-skip-browser-warning": "true"
         },
       );
-      print(response.body);
 
       if (response.statusCode == 200) {
         List<dynamic> notes = jsonDecode(response.body);
@@ -249,6 +248,31 @@ class ApiService {
       }
     } catch (e) {
       throw Exception('Error while fetching search results: $e');
+    }
+  }
+
+  Future<String> askAi(String question) async {
+    final url = Uri.parse('$_baseUrl/ask_ai/$question');
+
+    try {
+      final response = await http.get(
+        url,
+        headers: {
+          'accept': 'application/json',
+          "ngrok-skip-browser-warning": "true"
+        },
+      );
+
+      if (response.statusCode == 200) {
+        // Zwraca odpowiedź AI w formacie tekstowym
+        return response.body; // Zakładam, że odpowiedź jest w polu 'answer'
+      } else {
+        print('Błąd podczas wysyłania pytania do AI: ${response.statusCode}');
+        return 'Nie udało się uzyskać odpowiedzi.';
+      }
+    } catch (e) {
+      print('Błąd połączenia: $e');
+      return 'Błąd połączenia z serwerem.';
     }
   }
 }
